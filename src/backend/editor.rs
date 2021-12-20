@@ -25,7 +25,7 @@ pub struct Pane {
 
 impl Pane {
     // does not draw cursor
-    pub fn display<'a>(&self, buffers: &'a [Buffer]) -> Option<impl Iterator<Item = impl Iterator<Item = &'a char>>> {
+    fn display<'a>(&self, buffers: &'a [Buffer]) -> Option<impl Iterator<Item = impl Iterator<Item = &'a char>>> {
         let buffer = buffers.get(self.buffer)?;
         let first_col = self.first_col;
         let width = self.width;
@@ -35,6 +35,22 @@ impl Pane {
             .map(move |line| line.iter()
                  .skip(first_col)
                  .take(width)))
+    }
+
+    fn move_cursor(&mut self, buffers: &[Buffer], rows: isize, cols: isize) -> Option<()> {
+        let buffer = buffers.get(self.buffer)?;
+        if let Some(line) = buffer.lines.get((self.cursor_row as isize + rows) as usize) {
+            self.cursor_row = (self.cursor_row as isize + rows) as usize;
+            self.cursor_col = ((self.cursor_col as isize + cols).max(0) as usize).min(line.len());
+        } else if (-rows) > self.cursor_row as isize {
+            self.cursor_row = 0;
+            self.cursor_col = ((self.cursor_col as isize + cols).max(0) as usize).min(buffer.lines.get(0).map(|line| line.len()).unwrap_or(0));
+        } else {
+            self.cursor_row = buffer.lines.len();
+            self.cursor_col = 0;
+        }
+
+        Some(())
     }
 }
 
@@ -62,13 +78,16 @@ impl Editor {
         ui.draw(" ");
         ui.set_background(Colour::Reset);
     }
+    pub fn move_cursor(&mut self, rows: isize, cols: isize) {
+        self.pane.move_cursor(&self.buffers, rows, cols);
+    }
     pub fn draw(&self, ui: &mut impl UI) {
         let img = self.pane.display(&self.buffers).expect("failed to produce image: buffer was likely closed prematurely");
         let mut total = 0;
+        let mut drawn_cursor = false;
         for (y, line) in img.enumerate() {
             total += 1;
             if y == self.pane.cursor_row {
-                let mut drawn_cursor = false;
                 for (x, c) in line.enumerate() {
                     if x == self.pane.cursor_col {
                         drawn_cursor = true;
@@ -79,6 +98,7 @@ impl Editor {
                 }
                 if !drawn_cursor {
                     Editor::draw_cursor(ui);
+                    drawn_cursor = true;
                 }
                 ui.newln();
             } else {
@@ -86,6 +106,9 @@ impl Editor {
                 line_str.extend(line);
                 ui.drawln(&line_str);
             }
+        }
+        if !drawn_cursor {
+            Editor::draw_cursor(ui);
         }
         for _ in total..self.pane.height-1 {
             ui.newln();

@@ -4,17 +4,26 @@ mod frontend;
 use frontend::ui::*;
 use frontend::unix_term::*;
 use backend::editor::*;
-use std::thread::sleep;
-use std::time::Duration;
 
-fn main() {
+fn main() -> Result<(), UIError> {
     let mut term = Term::sys_default().expect("failed to spawn system default terminal");
     let mut ed = Editor::open(term.width(), term.height());
-    ed.draw(&mut term);
-    sleep(Duration::from_secs(2));
-    term.clear();
     ed.load_into(0, "introducing\npurport\nit claims it is a text editor".to_string());
     ed.draw(&mut term);
-    sleep(Duration::from_secs(2));
+
+    loop {
+        let ev = term.next_event()?;
+        match ev {
+            Event::SpecialChar(EscapeSeq::DownArrow) => ed.move_cursor(1, 0),
+            Event::SpecialChar(EscapeSeq::UpArrow) => ed.move_cursor(-1, 0),
+            Event::SpecialChar(EscapeSeq::LeftArrow) => ed.move_cursor(0, -1),
+            Event::SpecialChar(EscapeSeq::RightArrow) => ed.move_cursor(0, 1),
+            Event::NormalChar('q') => break,
+            _ => continue
+        }
+        term.clear();
+        ed.draw(&mut term);
+    }
     term.clear();
+    Ok(())
 }
