@@ -35,7 +35,8 @@ pub enum EscapeSeq {
 pub enum Colour {
     White,
     Black,
-    Red
+    Red,
+    Reset
 }
 
 #[derive(Debug)]

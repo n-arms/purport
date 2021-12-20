@@ -50,14 +50,16 @@ impl UI for Term {
         match colour {
             Colour::Black => print!("\x1b[30m"),
             Colour::White => print!("\x1b[37m"),
-            Colour::Red => print!("\x1b[31m")
+            Colour::Red => print!("\x1b[31m"),
+            Colour::Reset => print!("\x1b[0m")
         }
     }
     fn set_background(&mut self, colour: Colour) {
         match colour {
             Colour::Black => print!("\x1b[40m"),
             Colour::White => print!("\x1b[47m"),
-            Colour::Red => print!("\x1b[41m")
+            Colour::Red => print!("\x1b[41m"),
+            Colour::Reset => print!("\x1b[0m")
         }
     }
 }
@@ -107,10 +109,10 @@ impl Term {
             Term::cleanup();
             return Err(UIError::ProcFailed(cols_cmd.status));
         }
-        let width = String::from_utf8_lossy(&lines_cmd.stdout[..lines_cmd.stdout.len() - 1])
+        let height = String::from_utf8_lossy(&lines_cmd.stdout[..lines_cmd.stdout.len() - 1])
             .parse()
             .map_err(|_| UIError::MissingSystemReq(String::from("tput lines")))?;
-        let height = String::from_utf8_lossy(&cols_cmd.stdout[..cols_cmd.stdout.len() - 1])
+        let width = String::from_utf8_lossy(&cols_cmd.stdout[..cols_cmd.stdout.len() - 1])
             .parse()
             .map_err(|_| UIError::MissingSystemReq(String::from("tput cols")))?;
         Ok(Term {
