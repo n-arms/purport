@@ -10,6 +10,7 @@ pub trait UI {
     fn width(&self) -> usize;
     fn height(&self) -> usize;
     fn clear(&mut self);
+    fn refresh(&mut self) -> Result<(), UIError>;
     fn drawln(&mut self, text: &str) {
         self.draw(text);
         self.newln();

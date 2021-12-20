@@ -7,12 +7,12 @@ use std::ops;
 pub struct Term {
     width: usize,
     height: usize,
+    buffer: String
 }
 
 impl UI for Term {
     fn draw(&mut self, text: &str) {
-        print!("{}", text);
-        io::stdout().flush().expect("failed to flush stdout");
+        self.buffer.push_str(text);
     }
     fn height(&self) -> usize {
         self.height
@@ -21,7 +21,7 @@ impl UI for Term {
         self.width
     }
     fn newln(&mut self) {
-        println!("\r");
+        self.buffer.push_str("\r\n");
     }
     fn next_event(&mut self) -> Result<Event, UIError> {
         let c = io::stdin().bytes().nth(0).ok_or(UIError::FailedStdinRead)?.map_err(|_| UIError::FailedStdinRead)?;
@@ -43,24 +43,28 @@ impl UI for Term {
         }
     }
     fn clear(&mut self) {
-        print!("\x1b[2J\x1b[1;1H");
-        io::stdout().flush().expect("failed to flush stdout");
+        self.buffer.push_str("\x1b[2J\x1b[1;1H");
     }
     fn set_foreground(&mut self, colour: Colour) {
-        match colour {
-            Colour::Black => print!("\x1b[30m"),
-            Colour::White => print!("\x1b[37m"),
-            Colour::Red => print!("\x1b[31m"),
-            Colour::Reset => print!("\x1b[0m")
-        }
+        self.buffer.push_str(match colour {
+            Colour::Black => "\x1b[30m",
+            Colour::White => "\x1b[37m",
+            Colour::Red => "\x1b[31m",
+            Colour::Reset => "\x1b[0m"
+        });
     }
     fn set_background(&mut self, colour: Colour) {
-        match colour {
-            Colour::Black => print!("\x1b[40m"),
-            Colour::White => print!("\x1b[47m"),
-            Colour::Red => print!("\x1b[41m"),
-            Colour::Reset => print!("\x1b[0m")
-        }
+        self.buffer.push_str(match colour {
+            Colour::Black => "\x1b[40m",
+            Colour::White => "\x1b[47m",
+            Colour::Red => "\x1b[41m",
+            Colour::Reset => "\x1b[0m"
+        });
+    }
+    fn refresh(&mut self) -> Result<(), UIError> {
+        print!("{}", self.buffer);
+        self.buffer = String::new();
+        io::stdout().flush().map_err(|e| UIError::IOErr(e))
     }
 }
 
@@ -117,7 +121,8 @@ impl Term {
             .map_err(|_| UIError::MissingSystemReq(String::from("tput cols")))?;
         Ok(Term {
             width,
-            height
+            height,
+            buffer: String::new()
         })
     }
 }

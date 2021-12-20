@@ -1,6 +1,6 @@
-use super::editor::*;
+#![warn(unsafe_code)]
 
-#[warn(unsafe_code)]
+use super::editor::*;
 
 #[derive(Clone, Debug, Default)]
 pub struct Pane {

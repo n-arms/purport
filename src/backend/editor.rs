@@ -19,7 +19,7 @@ impl Editor {
         Editor {
             buffers: vec![Buffer {lines: vec![Vec::new()]}],
             pane: Pane {
-                width,
+                width: width - 2,
                 height,
                 buffer: 0,
                 first_row: 0,
@@ -43,6 +43,7 @@ impl Editor {
         let mut total = 0;
         let mut drawn_cursor = false;
         for (y, line) in img.enumerate() {
+            ui.draw("~ ");
             total += 1;
             if y == self.pane.cursor_row {
                 for (x, c) in line.enumerate() {
@@ -65,10 +66,12 @@ impl Editor {
             }
         }
         if !drawn_cursor {
+            ui.draw("~ ");
             Editor::draw_cursor(ui);
         }
         for _ in total..self.pane.height-1 {
             ui.newln();
         }
+        ui.refresh().expect("failed to refresh ui");
     }
 }
