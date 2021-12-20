@@ -1,58 +1,18 @@
 use crate::frontend::ui::*;
+use super::pane::*;
 
 #[derive(Clone, Debug)]
 pub struct Editor {
-    buffers: Vec<Buffer>,
-    pane: Pane
+    pub buffers: Vec<Buffer>,
+    pub pane: Pane
 }
 
 
 #[derive(Clone, Debug)]
 pub struct Buffer {
-    lines: Vec<Vec<char>>
+    pub lines: Vec<Vec<char>>
 }
 
-#[derive(Clone, Debug, Default)]
-pub struct Pane {
-    buffer: usize,
-    first_row: usize,
-    first_col: usize,
-    cursor_row: usize,
-    cursor_col: usize,
-    width: usize,
-    height: usize
-}
-
-impl Pane {
-    // does not draw cursor
-    fn display<'a>(&self, buffers: &'a [Buffer]) -> Option<impl Iterator<Item = impl Iterator<Item = &'a char>>> {
-        let buffer = buffers.get(self.buffer)?;
-        let first_col = self.first_col;
-        let width = self.width;
-        Some(buffer.lines.iter()
-            .skip(self.first_row)
-            .take(self.height)
-            .map(move |line| line.iter()
-                 .skip(first_col)
-                 .take(width)))
-    }
-
-    fn move_cursor(&mut self, buffers: &[Buffer], rows: isize, cols: isize) -> Option<()> {
-        let buffer = buffers.get(self.buffer)?;
-        if let Some(line) = buffer.lines.get((self.cursor_row as isize + rows) as usize) {
-            self.cursor_row = (self.cursor_row as isize + rows) as usize;
-            self.cursor_col = ((self.cursor_col as isize + cols).max(0) as usize).min(line.len());
-        } else if (-rows) > self.cursor_row as isize {
-            self.cursor_row = 0;
-            self.cursor_col = ((self.cursor_col as isize + cols).max(0) as usize).min(buffer.lines.get(0).map(|line| line.len()).unwrap_or(0));
-        } else {
-            self.cursor_row = buffer.lines.len();
-            self.cursor_col = 0;
-        }
-
-        Some(())
-    }
-}
 
 impl Editor {
     pub fn open(width: usize, height: usize) -> Self {
@@ -77,9 +37,6 @@ impl Editor {
         ui.set_background(Colour::Red);
         ui.draw(" ");
         ui.set_background(Colour::Reset);
-    }
-    pub fn move_cursor(&mut self, rows: isize, cols: isize) {
-        self.pane.move_cursor(&self.buffers, rows, cols);
     }
     pub fn draw(&self, ui: &mut impl UI) {
         let img = self.pane.display(&self.buffers).expect("failed to produce image: buffer was likely closed prematurely");
