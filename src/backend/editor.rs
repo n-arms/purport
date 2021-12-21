@@ -20,7 +20,7 @@ impl Editor {
             buffers: vec![Buffer {lines: vec![Vec::new()]}],
             pane: Pane {
                 width: width - 2,
-                height,
+                height: height - 2,
                 buffer: 0,
                 first_row: 0,
                 first_col: 0,
@@ -38,10 +38,38 @@ impl Editor {
         ui.draw(" ");
         ui.set_background(Colour::Reset);
     }
+
+    pub fn draw(&self, ui: &mut impl UI) {
+        let lines = self.pane.display(&self.buffers).expect("failed to produce image: buffer was likely closed prematurely");
+        for _ in 0..self.pane.width + 2 {
+            ui.draw("─");
+        }
+        ui.newln();
+        let mut total = 0;
+        for line in lines {
+            total += 1;
+            for c in line {
+                match c {
+                    Char::Background(c) => ui.set_background(c),
+                    Char::Foreground(c) => ui.set_foreground(c),
+                    Char::Normal(c) => ui.draw(&c.to_string())
+                }
+            }
+            ui.newln();
+        }
+        log!("draw {} lines", total);
+        for _ in 0..self.pane.width + 2 {
+            ui.draw("─");
+        }
+    }
+    /*
     pub fn draw(&self, ui: &mut impl UI) {
         let img = self.pane.display(&self.buffers).expect("failed to produce image: buffer was likely closed prematurely");
         let mut total = 0;
         let mut drawn_cursor = false;
+        for _ in 0..self.pane.width + 2 {
+            ui.draw("─");
+        }
         for (y, line) in img.enumerate() {
             ui.draw("~ ");
             total += 1;
@@ -72,6 +100,10 @@ impl Editor {
         for _ in total..self.pane.height-1 {
             ui.newln();
         }
+        for _ in 0..self.pane.width + 2 {
+            ui.draw("─");
+        }
         ui.refresh().expect("failed to refresh ui");
     }
+    */
 }

@@ -24,7 +24,7 @@ pub enum Event {
     Resize
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Copy)]
 pub enum EscapeSeq {
     LeftArrow,
     RightArrow,
@@ -32,7 +32,7 @@ pub enum EscapeSeq {
     DownArrow
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Copy)]
 pub enum Colour {
     White,
     Black,

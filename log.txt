@@ -1,0 +1,4983 @@
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+draw 5 lines
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+height 5
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+draw 5 lines
+draw 5 lines
+cursor up 1
+draw 5 lines
+draw 5 lines
+draw 5 lines
+draw 5 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+height 17
+draw 17 lines
+draw 17 lines
+cursor up 1
+draw 17 lines
+draw 17 lines
+cursor up 1
+draw 17 lines
+draw 17 lines
+cursor up 1
+draw 17 lines
+draw 17 lines
+cursor up 1
+draw 17 lines
+draw 17 lines
+cursor up 1
+draw 17 lines
+draw 17 lines
+cursor up 1
+draw 17 lines
+draw 17 lines
+cursor up 1
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 17 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+height 6
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+cursor up 1
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines
+draw 6 lines

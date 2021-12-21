@@ -85,7 +85,6 @@ impl Term {
     pub fn sys_default() -> Result<Self, UIError> {
         print!("\x1b[?25l");
         io::stdout().flush().expect("failed to flush stdout");
-
         let raw_cmd = Command::new("stty")
             .arg("-echo")
             .arg("raw")
@@ -96,7 +95,6 @@ impl Term {
             Term::cleanup();
             return Err(UIError::ProcFailed(raw_cmd.status));
         }
-
         let lines_cmd = Command::new("tput")
             .arg("lines")
             .output()
