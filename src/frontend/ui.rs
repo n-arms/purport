@@ -9,8 +9,8 @@ pub trait UI {
     fn next_event(&mut self) -> Result<Event, UIError>;
     fn width(&self) -> usize;
     fn height(&self) -> usize;
-    fn clear(&mut self);
     fn refresh(&mut self) -> Result<(), UIError>;
+    fn move_cursor(&mut self, row: usize, col: usize);
     fn drawln(&mut self, text: &str) {
         self.draw(text);
         self.newln();
@@ -21,7 +21,7 @@ pub trait UI {
 pub enum Event {
     NormalChar(char),
     SpecialChar(EscapeSeq),
-    Resize
+    Resize,
 }
 
 #[derive(Clone, Debug, Copy)]
@@ -29,7 +29,7 @@ pub enum EscapeSeq {
     LeftArrow,
     RightArrow,
     UpArrow,
-    DownArrow
+    DownArrow,
 }
 
 #[derive(Clone, Debug, Copy)]
@@ -37,7 +37,7 @@ pub enum Colour {
     White,
     Black,
     Red,
-    Reset
+    Reset,
 }
 
 #[derive(Debug)]
@@ -45,5 +45,5 @@ pub enum UIError {
     FailedStdinRead,
     IOErr(io::Error),
     ProcFailed(ExitStatus),
-    MissingSystemReq(String)
+    MissingSystemReq(String),
 }

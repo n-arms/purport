@@ -2,6 +2,7 @@
 
 use super::editor::*;
 use crate::frontend::ui::Colour;
+use std::io::Write;
 
 #[derive(Clone, Debug, Default)]
 pub struct Pane {
@@ -11,141 +12,103 @@ pub struct Pane {
     pub cursor_row: usize,
     pub cursor_col: usize,
     pub width: usize,
-    pub height: usize
+    pub height: usize,
 }
 
 #[derive(Debug, Copy, Clone)]
 pub enum Char {
     Normal(char),
     Foreground(Colour),
-    Background(Colour)
+    Background(Colour),
 }
 
 pub struct TextIter<'a, Line: Iterator<Item = &'a char>, Text: Iterator<Item = Line>> {
     text: Text,
-    cursor_screen_y: usize,
-    current_screen_y: usize,
-    cursor_screen_x: usize,
-    max_screen_y: usize
+    row: usize,
+    max_row: usize,
+    max_col: usize
 }
 
-impl<'a, Line: Iterator<Item = &'a char>, Text: Iterator<Item = Line>> Iterator for TextIter<'a, Line, Text> {
+impl<'a, Line, Text> Iterator for TextIter<'a, Line, Text>
+where 
+    Line: Iterator<Item = &'a char>,
+    Text: Iterator<Item = Line>
+
+{
     type Item = LineIter<'a, Line>;
     fn next(&mut self) -> Option<Self::Item> {
-        if self.max_screen_y > self.current_screen_y {
-            if let Some(line) = self.text.next() {
-                if self.current_screen_y == self.cursor_screen_y {
-                    self.current_screen_y += 1;
-                    Some(LineIter::CursorLine {
-                        line,
-                        cursor_screen_x: self.cursor_screen_x,
-                        current_screen_x: 0,
-                        cursor_drawn: false,
-                        cursor_colour: false
-                    })
-                } else {
-                    self.current_screen_y += 1;
-                    Some(LineIter::NormalLine(line))
-                }
-            } else if self.cursor_screen_y >= self.current_screen_y {
-                self.current_screen_y += 1;
-                Some(LineIter::EmptyLine(0))
-            } else {
-                self.current_screen_y += 1;
-                Some(LineIter::EmptyLine(3))
-            }
+        if self.max_row > self.row {
+            self.row += 1;
+            Some(LineIter {
+                max_col: self.max_col,
+                col: 0,
+                line: self.text.next()
+            })
+        } else {
+            None
+        }
+    }
+}
+// to be used with syntax highlighting later: we want to reuse the memory for each line, (hence
+// holding an iterator instead of just collecting, but copying over the start/end points for
+// colours doesnt seem too crazy (although it is still O(n))
+pub struct LineIter<'a, Line: Iterator<Item = &'a char>> {
+    max_col: usize,
+    col: usize,
+    line: Option<Line>
+}
+
+impl<'a, Line: Iterator<Item = &'a char>> Iterator for LineIter<'a, Line> {
+    type Item = Char;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.max_col > self.col {
+            self.col += 1;
+            let c = self.line.as_mut().and_then(|line| line.next().copied()).unwrap_or(' ');
+            Some(Char::Normal(c))
         } else {
             None
         }
     }
 }
 
-pub enum LineIter<'a, Line: Iterator<Item = &'a char>> {
-    CursorLine {
-        line: Line,
-        cursor_screen_x: usize,
-        current_screen_x: usize,
-        cursor_drawn: bool,
-        cursor_colour: bool,
-    },
-    NormalLine(Line),
-    EmptyLine(u8)
-}
-
-impl<'a, Line: Iterator<Item = &'a char>> Iterator for LineIter<'a, Line> {
-    type Item = Char;
-    fn next(&mut self) -> Option<Self::Item> {
-        match self {
-            Self::CursorLine {line, current_screen_x, cursor_screen_x, cursor_drawn, cursor_colour} => 
-                if cursor_screen_x == current_screen_x && !*cursor_colour && !*cursor_drawn {
-                    *cursor_colour = true;
-                    Some(Char::Background(Colour::White))
-                } else if *cursor_colour && !*cursor_drawn {
-                    *cursor_drawn = true;
-                    *current_screen_x += 1;
-                    line.next().map(|c| Char::Normal(*c)).or(Some(Char::Normal(' ')))
-                } else if *cursor_colour && *cursor_drawn {
-                    *cursor_colour = false;
-                    Some(Char::Background(Colour::Reset))
-                } else if let Some(c) = line.next() {
-                    *current_screen_x += 1;
-                    Some(Char::Normal(*c))
-                } else if !*cursor_drawn {
-                    *cursor_colour = true;
-                    Some(Char::Background(Colour::White))
-                } else {
-                    None
-                }
-            Self::NormalLine(line) => line.next().map(|c| Char::Normal(*c)),
-            Self::EmptyLine(drawn @ 0) => {
-                *drawn += 1;
-                Some(Char::Background(Colour::White))
-            }
-            Self::EmptyLine(drawn @ 1) => {
-                *drawn += 1;
-                Some(Char::Normal(' '))
-            }
-            Self::EmptyLine(drawn @ 2) => {
-                *drawn += 1;
-                Some(Char::Background(Colour::Reset))
-            }
-            Self::EmptyLine(_) => None
-        }
-    }
-}
-
 impl Pane {
-    pub fn display<'a>(&self, buffers: &'a [Buffer]) -> Option<impl Iterator<Item = impl Iterator<Item = Char> + 'a> + 'a> {
+    pub fn display<'a>(
+        &self,
+        buffers: &'a [Buffer],
+    ) -> Option<impl Iterator<Item = impl Iterator<Item = Char> + 'a> + 'a> {
         let buffer = buffers.get(self.buffer)?;
         let first_col = self.first_col;
         let width = self.width;
         Some(TextIter {
-            text: buffer.lines.iter()
+            text: buffer
+                .lines
+                .iter()
                 .skip(self.first_row)
                 .take(self.height)
-                .map(move |line| line.iter()
-                     .skip(first_col)
-                     .take(width)),
-            cursor_screen_x: self.cursor_col - self.first_col,
-            cursor_screen_y: self.cursor_row - self.first_row,
-            current_screen_y: 0,
-            max_screen_y: self.height
+                .map(move |line| line.iter().skip(first_col).take(width)),
+            row: 0,
+            max_row: self.height,
+            max_col: self.width
         })
     }
-
+//abX
+//len = 3
+//cursor = 2
+//3 - 2
     pub fn move_cursor_left_right(&mut self, buffers: &[Buffer], dist: isize) -> Option<()> {
         let buffer = buffers.get(self.buffer)?;
         if let Some(line) = buffer.lines.get(self.cursor_row) {
             if dist > 0 {
                 // the distance from the screen pos of the cursor to the right edge of the screen
-                let old_edge_dist = self.width - (self.cursor_col - self.first_col); 
+                let old_edge_dist = self.width - (self.cursor_col - self.first_col);
                 // the distance the cursor needs to be moved to the right
-                let dist_right = (dist as usize).min(line.len() - self.cursor_col - 1);
+                let dist_right = (dist as usize).min(line.len() - self.cursor_col);
                 // if the distance to be moved is more than the available space to move
                 if old_edge_dist <= dist_right {
                     self.first_col += 1 + dist_right - old_edge_dist; // scroll by the overflow
                 }
                 self.cursor_col += dist_right;
+                log!("cursor col = {}", self.cursor_col);
             } else {
                 // the distance from the screen pos of the cursor to the left edge of the screen
                 let old_edge_dist = self.cursor_col - self.first_col;
@@ -164,25 +127,30 @@ impl Pane {
     pub fn move_cursor_up_down(&mut self, buffers: &[Buffer], dist: isize) -> Option<()> {
         let buffer = buffers.get(self.buffer)?;
         if dist > 0 {
-            log!("height {}", self.height);
             let old_edge_dist = self.height - (self.cursor_row - self.first_row);
-            let dist_down = (dist as usize).min(buffer.lines.len() - self.cursor_row);
+            let dist_down = (dist as usize).min(buffer.lines.len() - self.cursor_row - 1);
             if old_edge_dist <= dist_down {
                 self.first_row += 1 + dist_down - old_edge_dist;
             }
             self.cursor_row += dist_down;
+            let new_line_len = buffer.lines.get(self.cursor_row).map(|line| line.len()).unwrap_or(0);
+            if new_line_len < self.cursor_col {
+                self.cursor_col = new_line_len;
+            }
         } else {
-            log!("cursor up {}", -dist);
             let old_edge_dist = self.cursor_row - self.first_row;
             let dist_up = -(dist.max(-(self.cursor_row as isize))) as usize;
             if old_edge_dist <= dist_up {
                 self.first_row -= dist_up - old_edge_dist;
             }
             self.cursor_row -= dist_up;
+            let new_line_len = buffer.lines.get(self.cursor_row).map(|line| line.len()).unwrap_or(0);
+            if new_line_len < self.cursor_col {
+                self.cursor_col = new_line_len;
+            }
         }
         Some(())
     }
-
     pub unsafe fn set_cursor(&mut self, row: usize, col: usize) {
         self.cursor_col = col;
         self.cursor_row = row;
@@ -224,7 +192,7 @@ impl Pane {
         if let Some(line) = buffer.lines.get_mut(self.cursor_row) {
             if self.cursor_col == 0 && self.cursor_row == 0 {
                 Some(())
-            } else if self.cursor_col == 0{
+            } else if self.cursor_col == 0 {
                 let old = line.to_owned();
                 if let Some(prev) = buffer.lines.get_mut(self.cursor_row - 1) {
                     unsafe {
