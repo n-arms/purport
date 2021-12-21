@@ -1,6 +1,7 @@
 use super::pane::*;
 use crate::frontend::ui::*;
 use std::io::Write;
+use super::cursor::*;
 
 #[derive(Clone, Debug)]
 pub struct Editor {
@@ -23,11 +24,9 @@ impl Editor {
                 width: width - 3,
                 height: height - 2,
                 buffer: 0,
-                first_row: 0,
-                first_col: 0,
-                cursor_row: 0,
-                cursor_col: 0,
-            },
+                offset: Offset::default(),
+                cursor: Cursor::default()
+            }
         }
     }
 
@@ -66,6 +65,6 @@ impl Editor {
             ui.draw("─");
         }
         ui.draw("┘");
-        ui.move_cursor(self.pane.cursor_row + 2 - self.pane.first_row, self.pane.cursor_col + 3 - self.pane.first_col);
+        ui.move_cursor(self.pane.cursor.row + 2 - self.pane.offset.row, self.pane.cursor.col + 3 - self.pane.offset.col);
     }
 }
