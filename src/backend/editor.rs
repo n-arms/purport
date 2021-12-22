@@ -1,7 +1,7 @@
+use super::cursor::*;
 use super::pane::*;
 use crate::frontend::ui::*;
-use std::io::Write;
-use super::cursor::*;
+use std::fs;
 
 #[derive(Clone, Debug)]
 pub struct Editor {
@@ -12,29 +12,41 @@ pub struct Editor {
 #[derive(Clone, Debug)]
 pub struct Buffer {
     pub lines: Vec<Vec<char>>,
+    pub file_name: Option<String>
 }
 
 impl Editor {
     pub fn open(width: usize, height: usize) -> Self {
         Editor {
             buffers: vec![Buffer {
-                lines: vec![Vec::new()],
+                lines: vec![String::from("welcome!").chars().collect()],
+                file_name: None
             }],
             pane: Pane {
-                width: width - 3,
-                height: height - 2,
+                width,
+                height,
                 buffer: 0,
                 offset: Offset::default(),
-                cursor: Cursor::default()
-            }
+                cursor: Cursor::default(),
+            },
         }
     }
 
-    pub fn load_into(&mut self, buffer: usize, text: String) -> Option<()> {
-        self.buffers.get_mut(buffer)?.lines = text
-            .split('\n')
-            .map(|line| line.chars().collect())
-            .collect();
+    pub fn load_into(&mut self, buffer: usize, file_name: Option<String>) -> Option<()> {
+        let buffer = self.buffers.get_mut(buffer)?;
+        buffer.lines = file_name
+            .clone()
+            .and_then(|fp| fs::read(&fp).ok())
+            .map(|file| {
+                let mut lines: Vec<_> = String::from_utf8_lossy(file.as_ref())
+                    .split('\n')
+                    .map(|line| line.chars().collect())
+                    .collect();
+                lines.truncate(lines.len() - 1);
+                lines
+            })
+            .unwrap_or_else(|| vec![String::from("welcome!").chars().collect()]);
+        buffer.file_name = file_name;
         Some(())
     }
 
@@ -43,28 +55,20 @@ impl Editor {
             .pane
             .display(&self.buffers)
             .expect("failed to produce image: buffer was likely closed prematurely");
-
-        for _ in 0..self.pane.width + 2 {
-            ui.draw("─");
-        }
-        ui.draw("┐");
-        ui.newln();
+        let mut first = true;
         for line in lines {
-            ui.draw("~ ");
+            if !first {
+                ui.newln();
+            }
+            first = false;
             for c in line {
                 match c {
-                    Char::Background(c) => ui.set_background(c),
-                    Char::Foreground(c) => ui.set_foreground(c),
                     Char::Normal(c) => ui.draw(&c.to_string()),
+                    Char::Foreground(c) => ui.set_foreground(c),
+                    Char::Background(c) => ui.set_background(c)
                 }
             }
-            ui.draw("│");
-            ui.newln();
+            ui.move_cursor(self.pane.cursor.row + 1, self.pane.cursor.col + 3);
         }
-        for _ in 0..self.pane.width + 2 {
-            ui.draw("─");
-        }
-        ui.draw("┘");
-        ui.move_cursor(self.pane.cursor.row + 2 - self.pane.offset.row, self.pane.cursor.col + 3 - self.pane.offset.col);
     }
 }

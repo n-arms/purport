@@ -22,10 +22,9 @@ fn main() -> Result<(), UIError> {
     let mut ed = Editor::open(term.width(), term.height());
 
     let fp = args()
-        .nth(1)
-        .ok_or_else(|| UIError::MissingSystemReq(String::from("missing command line arg")))?;
-    let file = fs::read_to_string(fp.clone()).map_err(UIError::IOErr)?;
-    ed.load_into(0, file[..file.len()-1].to_string());
+        .nth(1);
+    
+    ed.load_into(0, fp.clone());
     ed.draw(&mut term);
     term.refresh().expect("failed to refresh ui");
 
@@ -50,23 +49,24 @@ fn main() -> Result<(), UIError> {
     }
     term.refresh().expect("failed to refresh ui");
 
-    fs::write(
-        fp,
-        ed.buffers[0]
-            .lines
-            .iter()
-            .map(|line| {
-                line.iter().fold(String::new(), |mut acc, x| {
-                    acc.push(*x);
-                    acc
+    fp.map(|fp| {
+        fs::write(
+            fp,
+            ed.buffers[0]
+                .lines
+                .iter()
+                .map(|line| {
+                    line.iter().fold(String::new(), |mut acc, x| {
+                        acc.push(*x);
+                        acc
+                    })
                 })
-            })
-            .fold(String::new(), |mut acc, x| {
-                acc.push_str(&x);
-                acc.push('\n');
-                acc
-            }),
-    )
-    .map_err(UIError::IOErr)?;
+                .fold(String::new(), |mut acc, x| {
+                    acc.push_str(&x);
+                    acc.push('\n');
+                    acc
+                }),
+        ).ok()
+    });
     Ok(())
 }

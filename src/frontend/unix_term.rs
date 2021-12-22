@@ -10,7 +10,7 @@ pub struct Term {
     buffer: Vec<String>,
     row: usize,
     cursor_row: usize,
-    cursor_col: usize
+    cursor_col: usize,
 }
 /* for every line to be printed:
 collect all the data
@@ -90,7 +90,12 @@ impl UI for Term {
         self.row = 0;
         let max = self.buffer.len();
         for (row, line) in self.buffer.iter_mut().enumerate() {
-            print!("\x1b[{};1H{}{}", row + 1, line, if row + 1 == max {""} else {"\r\n"});
+            print!(
+                "\x1b[{};1H{}{}",
+                row + 1,
+                line,
+                if row + 1 == max { "" } else { "\r\n" }
+            );
             *line = String::new();
         }
         print!("\x1b[?25h\x1b[{};{}H", self.cursor_row, self.cursor_col);
@@ -150,7 +155,7 @@ impl Term {
             buffer: vec![String::new(); height],
             cursor_col: 0,
             cursor_row: 0,
-            row: 0
+            row: 0,
         })
     }
 }
