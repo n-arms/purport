@@ -1,18 +1,17 @@
-#![warn(unsafe_code)]
-
-use super::cursor::*;
-use super::editor::*;
+use super::cursor::{Cursor, Offset};
+use super::editor::{Buffer, Error};
 use crate::frontend::ui::Colour;
 
 #[derive(Clone, Debug, Default)]
 pub struct Pane {
-    pub buffer: usize,
+    pub buffer_id: usize,
     pub width: usize,
     pub height: usize,
     pub offset: Offset,
     pub cursor: Cursor,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Copy, Clone)]
 pub enum Char {
     Normal(char),
@@ -21,74 +20,109 @@ pub enum Char {
 }
 
 impl Pane {
-    pub fn move_cursor_left_right(&mut self, buffers: &[Buffer], dist: isize) -> Option<()> {
-        let buffer = buffers.get(self.buffer)?;
+    pub fn move_cursor_left_right(
+        &mut self,
+        buffers: &[Buffer],
+        dist: isize,
+    ) -> Result<(), Error> {
+        let buffer = buffers
+            .get(self.buffer_id)
+            .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
         self.cursor
-            .move_left_right(buffer, &mut self.offset, &self.width, dist);
-        Some(())
+            .move_left_right(buffer, &mut self.offset, self.width.saturating_sub(2), dist)
     }
 
-    pub fn move_cursor_up_down(&mut self, buffers: &[Buffer], dist: isize) -> Option<()> {
-        let buffer = buffers.get(self.buffer)?;
+    pub fn move_cursor_up_down(
+        &mut self,
+        buffers: &[Buffer],
+        dist: isize,
+    ) -> Result<(), Error> {
+        let buffer = buffers
+            .get(self.buffer_id)
+            .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
+        if self.height == 0 {
+            return Err(Error::InvalidHeight(self.height));
+        }
+        #[allow(clippy::integer_arithmetic)]
         self.cursor
-            .move_up_down(buffer, &mut self.offset, &self.height, dist);
-        Some(())
+            .move_up_down(buffer, &mut self.offset, self.height - 1, self.width.saturating_sub(2), dist)?;
+        Ok(())
     }
-    pub unsafe fn set_cursor(&mut self, row: usize, col: usize) {
+    pub fn set_cursor(&mut self, row: usize, col: usize) {
         self.cursor.col = col;
         self.cursor.row = row;
     }
 
-    pub fn insert_char(&mut self, buffers: &mut [Buffer], c: char) -> Option<()> {
+    pub fn insert_char(&mut self, buffers: &mut [Buffer], c: char) -> Result<(), Error> {
         if c == '\r' {
-            let buffer = buffers.get_mut(self.buffer)?;
+            let buffer = buffers
+                .get_mut(self.buffer_id)
+                .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
+                if line.len() < self.cursor.col {
+                    return Err(Error::CursorPastEnd {
+                        cursor: self.cursor.col,
+                        pos: line.len()
+                    });
+                }
+                #[allow(clippy::indexing_slicing)]
                 let rest = line[self.cursor.col..].to_vec();
                 line.truncate(self.cursor.col);
-                buffer.lines.insert(self.cursor.row + 1, rest);
-                unsafe {
-                    self.set_cursor(self.cursor.row + 1, 0);
-                }
+                buffer.lines.insert(self.cursor.row.saturating_add(1), rest); // if the file is usize::MAX lines long this will break
+                self.set_cursor(self.cursor.row.saturating_add(1), 0);
             } else {
                 buffer.lines.push(Vec::new());
-                self.move_cursor_up_down(buffers, 1);
+                self.move_cursor_up_down(buffers, 1)?;
             }
-            Some(())
+            Ok(())
         } else {
-            let buffer = buffers.get_mut(self.buffer)?;
+            let buffer = buffers
+                .get_mut(self.buffer_id)
+                .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
+                if self.cursor.col > line.len() {
+                    return Err(Error::CursorPastEnd {
+                            cursor: self.cursor.col,
+                            pos: line.len(),
+                        }
+                    );
+                }
+                #[allow(clippy::indexing_slicing)]
                 let rest = &line[self.cursor.col..].to_owned();
                 line.truncate(self.cursor.col);
                 line.push(c);
                 line.extend(rest);
-                self.move_cursor_left_right(buffers, 1);
+                self.move_cursor_left_right(buffers, 1)?;
             } else {
                 buffer.lines.push(vec![c]);
             }
 
-            Some(())
+            Ok(())
         }
     }
 
-    pub fn backspace(&mut self, buffers: &mut [Buffer]) -> Option<()> {
-        let buffer = buffers.get_mut(self.buffer)?;
+    pub fn backspace(&mut self, buffers: &mut [Buffer]) -> Result<(), Error> {
+        let buffer = buffers
+            .get_mut(self.buffer_id)
+            .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
         if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
             if self.cursor.col == 0 && self.cursor.row == 0 {
-                Some(())
+                Ok(())
             } else if self.cursor.col == 0 {
-                let old = line.to_owned();
+                let old = line.clone();
+                #[allow(clippy::integer_arithmetic)]
                 if let Some(prev) = buffer.lines.get_mut(self.cursor.row - 1) {
-                    unsafe {
-                        self.set_cursor(self.cursor.row - 1, prev.len());
-                    }
+                    // row != 0 due to the above if
+                    self.set_cursor(self.cursor.row - 1, prev.len());
                     prev.extend(old.iter());
-                    buffer.lines.remove(self.cursor.row + 1);
-                    Some(())
+                    buffer.lines.remove(self.cursor.row + 1); // row was decremented by set cursor, so it is less than usize::MAX
+                    Ok(())
                 } else {
-                    Some(())
+                    Ok(())
                 }
             } else {
-                line.remove(self.cursor.col - 1);
+                #[allow(clippy::integer_arithmetic)]
+                line.remove(self.cursor.col - 1); // col != 0 due to the above if
                 self.move_cursor_left_right(buffers, -1)
             }
         } else {
@@ -99,25 +133,41 @@ impl Pane {
     pub fn display<'a>(
         &self,
         buffers: &'a [Buffer],
-    ) -> Option<impl Iterator<Item = impl Iterator<Item = Char> + 'a> + 'a> {
-        let buffer = buffers.get(self.buffer)?;
+        welcome: &'a [Vec<char>],
+    ) -> Result<impl Iterator<Item = impl Iterator<Item = Char> + 'a> + 'a, Error> {
+        let buffer = buffers
+            .get(self.buffer_id)
+            .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
         let first_col = self.offset.col;
         let width = self.width;
-        Some(TextIter {
-            text: buffer
-                .lines
-                .iter()
-                .skip(self.offset.row)
-                .take(self.height - 1)
-                .map(move |line| line.iter().skip(first_col).take(width - 2)),
+        let text = if buffer.lines == vec![Vec::new()] && buffer.file_name == None {
+            welcome.iter()
+        } else {
+            buffer.lines.iter()
+        }
+        .skip(self.offset.row)
+        .take(
+            self.height
+                .checked_sub(1)
+                .ok_or(Error::InvalidHeight(
+                    self.height,
+                ))?,
+        )
+        .map(move |line| line.iter().skip(first_col).take(width.saturating_sub(2))); // line iter can handle 0 width lines
+        Ok(TextIter {
+            text,
             row: 0,
             max_row: self.height,
             max_col: self.width,
             status_bar: StatusBar {
-                file_name: buffer.file_name.as_ref().cloned().unwrap_or(String::from("[No Name]")),
+                file_name: buffer
+                    .file_name
+                    .as_ref()
+                    .cloned()
+                    .unwrap_or_else(|| String::from("[No Name]")),
                 line: self.cursor.row,
-                lines: buffer.lines.len()
-            }
+                lines: buffer.lines.len(),
+            },
         })
     }
 }
@@ -126,7 +176,7 @@ impl Pane {
 pub struct StatusBar {
     file_name: String,
     line: usize,
-    lines: usize
+    lines: usize,
 }
 
 pub struct TextIter<'a, L: Iterator<Item = &'a char>, Text: Iterator<Item = L>> {
@@ -134,7 +184,7 @@ pub struct TextIter<'a, L: Iterator<Item = &'a char>, Text: Iterator<Item = L>> 
     row: usize,
     max_row: usize,
     max_col: usize,
-    status_bar: StatusBar
+    status_bar: StatusBar,
 }
 
 impl<'a, L, Text> Iterator for TextIter<'a, L, Text>
@@ -144,19 +194,20 @@ where
 {
     type Item = LineIter<'a, L>;
     fn next(&mut self) -> Option<Self::Item> {
-        if (self.max_row - 1) > self.row {
-            self.row += 1;
+        #[allow(clippy::integer_arithmetic)]
+        if self.max_row.checked_sub(1).map(|row| row == self.row)? {
+            self.row += 1; // max row (a valid usize) was greater than row, so row + 1 is a valid usize
             Some(LineIter {
                 max_col: self.max_col,
                 col: 0,
-                line: self.text.next().map(|l| Line::Normal(0, l)).unwrap_or(Line::Empty),
+                line: Line::StatusBar(self.status_bar.clone()),
             })
-        } else if self.max_row - 1 == self.row {
-            self.row += 1;
+        } else if self.max_row.checked_sub(1).map(|row| row > self.row)? {
+            self.row += 1; // same reasoning as above
             Some(LineIter {
                 max_col: self.max_col,
                 col: 0,
-                line: Line::StatusBar(self.status_bar.clone())
+                line: self.text.next().map_or(Line::Empty, |l| Line::Normal(0, l)),
             })
         } else {
             None
@@ -167,7 +218,7 @@ where
 pub enum Line<'a, L: Iterator<Item = &'a char>> {
     StatusBar(StatusBar),
     Normal(u8, L),
-    Empty
+    Empty,
 }
 
 // to be used with syntax highlighting later: we want to reuse the memory for each line, (hence
@@ -176,41 +227,65 @@ pub enum Line<'a, L: Iterator<Item = &'a char>> {
 pub struct LineIter<'a, L: Iterator<Item = &'a char>> {
     max_col: usize,
     col: usize,
-    line: Line<'a, L>
+    line: Line<'a, L>,
 }
-
 
 impl<'a, L: Iterator<Item = &'a char>> Iterator for LineIter<'a, L> {
     type Item = Char;
+    #[allow(clippy::expect_used, clippy::integer_arithmetic, clippy::unwrap_in_result)]
     fn next(&mut self) -> Option<Self::Item> {
         if self.max_col > self.col {
-            self.col += 1;
+            self.col += 1; // self.col is less then a valid usize, it wont overflow
             let c = match &mut self.line {
                 Line::Empty => Char::Normal(' '),
                 Line::Normal(i @ 0, _) => {
-                    *i += 1;
+                    *i = 1;
                     Char::Normal('~')
                 }
                 Line::Normal(i @ 1, _) => {
-                    *i += 1;
+                    *i = 2;
                     Char::Normal(' ')
                 }
                 Line::Normal(_, l) => Char::Normal(l.next().copied().unwrap_or(' ')),
-                Line::StatusBar(StatusBar {file_name, line, lines}) => {
+                Line::StatusBar(StatusBar {
+                    file_name,
+                    line,
+                    lines,
+                }) => {
                     let line_str = line.to_string();
-                    let lines_str = lines.to_string();
+                    let max_line_str = lines.to_string();
+                    // col cannot be 0, as we already added 1 to it
                     if self.col == 1 {
                         Char::Background(Colour::Red)
                     } else if self.col - 1 <= file_name.len() {
-                        Char::Normal(file_name.chars().nth(self.col - 2).unwrap())
+                        // col is >= 2
+                        Char::Normal(
+                            file_name
+                                .chars()
+                                .nth(self.col - 2)
+                                .expect("unreachable due to bounds checks in if statement"),
+                        )
                     } else if self.col - 2 == file_name.len() {
+                        // col is >= 2
                         Char::Normal(' ')
                     } else if self.col - file_name.len() - 3 < line_str.len() {
-                        Char::Normal(line_str.chars().nth(self.col - file_name.len() - 3).unwrap())
+                        // col >= 3 + file_name.len
+                        Char::Normal(
+                            line_str
+                                .chars()
+                                .nth(self.col - file_name.len() - 3)
+                                .expect("unreachable due to bounds checks in if statement"),
+                        ) // the panic is unreachable
                     } else if self.col - file_name.len() - line_str.len() == 3 {
                         Char::Normal(':')
-                    } else if self.col - file_name.len() - line_str.len() - 4 < lines_str.len() {
-                        Char::Normal(lines_str.chars().nth(self.col - file_name.len() - line_str.len() - 4).unwrap())
+                    } else if self.col - file_name.len() - line_str.len() - 4 < max_line_str.len() {
+                        // col >= 4 + file_name.len + line_str.len
+                        Char::Normal(
+                            max_line_str
+                                .chars()
+                                .nth(self.col - file_name.len() - line_str.len() - 4)
+                                .expect("unreachable due to bounds checks in if statement"),
+                        ) // the panic is unreachable
                     } else {
                         Char::Normal(' ')
                     }
@@ -218,7 +293,9 @@ impl<'a, L: Iterator<Item = &'a char>> Iterator for LineIter<'a, L> {
             };
             Some(c)
         } else if self.max_col == self.col && matches!(self.line, Line::StatusBar(_)) {
-            self.col += 1;
+            self.col = self.col
+                .checked_add(1)
+                .expect("overflow: the width of the pane is == usize::MAX");
             Some(Char::Background(Colour::Reset))
         } else {
             None

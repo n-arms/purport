@@ -1,4 +1,4 @@
-use super::ui::*;
+use super::ui::{Colour, EscapeSeq, Event, UIError, UI};
 use std::io::{self, Read, Write};
 use std::ops;
 use std::process::{Command, Stdio};
@@ -28,6 +28,7 @@ impl UI for Term {
         self.cursor_row = row;
     }
     fn draw(&mut self, text: &str) {
+        #[allow(clippy::indexing_slicing)]
         self.buffer[self.row].push_str(text);
     }
     fn height(&self) -> usize {
@@ -37,24 +38,22 @@ impl UI for Term {
         self.width
     }
     fn newln(&mut self) {
-        self.row += 1;
-        if self.row == self.height {
-            panic!("call to increase current row beyond the max");
-        }
+        self.row = self.row.saturating_add(1);
+        assert!(
+            !(self.row >= self.height),
+            "call to increase current row beyond the max"
+        );
     }
     fn next_event(&mut self) -> Result<Event, UIError> {
         let c = io::stdin()
             .bytes()
             .nth(0)
             .ok_or(UIError::FailedStdinRead)?
-            .map_err(|_| UIError::FailedStdinRead)?;
+            .map_err(UIError::IOErr)?;
         if c == b'\x1b' {
             let mut esc = String::new();
             for byte in io::stdin().bytes() {
-                esc.push(
-                    byte.map(|b| b as char)
-                        .map_err(|_| UIError::FailedStdinRead)?,
-                );
+                esc.push(byte.map(|b| b as char).map_err(UIError::IOErr)?);
                 match esc.as_str() {
                     "[A" => return Ok(Event::SpecialChar(EscapeSeq::UpArrow)),
                     "[B" => return Ok(Event::SpecialChar(EscapeSeq::DownArrow)),
@@ -69,6 +68,7 @@ impl UI for Term {
         }
     }
     fn set_foreground(&mut self, colour: Colour) {
+        #[allow(clippy::indexing_slicing)]
         self.buffer[self.row].push_str(match colour {
             Colour::Black => "\x1b[30m",
             Colour::White => "\x1b[37m",
@@ -77,6 +77,7 @@ impl UI for Term {
         });
     }
     fn set_background(&mut self, colour: Colour) {
+        #[allow(clippy::indexing_slicing)]
         self.buffer[self.row].push_str(match colour {
             Colour::Black => "\x1b[40m",
             Colour::White => "\x1b[47m",
@@ -89,6 +90,7 @@ impl UI for Term {
         io::stdout().flush().map_err(UIError::IOErr)?;
         self.row = 0;
         let max = self.buffer.len();
+        #[allow(clippy::integer_arithmetic)]
         for (row, line) in self.buffer.iter_mut().enumerate() {
             print!(
                 "\x1b[{};1H{}{}",
@@ -104,16 +106,15 @@ impl UI for Term {
 }
 
 impl Term {
-    fn cleanup() {
+    fn cleanup() -> io::Result<()> {
         print!("\x1b[?25h");
-        io::stdout().flush().expect("failed to flush stdout");
+        io::stdout().flush()?;
 
-        let sane_cmd = Command::new("stty")
+        Command::new("stty")
             .arg("sane")
             .stdin(Stdio::inherit())
-            .output();
-
-        sane_cmd.expect("stty sane failed");
+            .output()?;
+        Ok(())
     }
 
     pub fn sys_default() -> Result<Self, UIError> {
@@ -124,7 +125,7 @@ impl Term {
             .output()
             .map_err(UIError::IOErr)?;
         if !raw_cmd.status.success() {
-            Term::cleanup();
+            Term::cleanup().map_err(UIError::IOErr)?;
             return Err(UIError::ProcFailed(raw_cmd.status));
         }
         let lines_cmd = Command::new("tput")
@@ -132,7 +133,7 @@ impl Term {
             .output()
             .map_err(UIError::IOErr)?;
         if !lines_cmd.status.success() {
-            Term::cleanup();
+            Term::cleanup().map_err(UIError::IOErr)?;
             return Err(UIError::ProcFailed(lines_cmd.status));
         }
         let cols_cmd = Command::new("tput")
@@ -140,15 +141,46 @@ impl Term {
             .output()
             .map_err(UIError::IOErr)?;
         if !cols_cmd.status.success() {
-            Term::cleanup();
+            Term::cleanup().map_err(UIError::IOErr)?;
             return Err(UIError::ProcFailed(cols_cmd.status));
         }
-        let height = String::from_utf8_lossy(&lines_cmd.stdout[..lines_cmd.stdout.len() - 1])
-            .parse()
-            .map_err(|_| UIError::MissingSystemReq(String::from("tput lines")))?;
-        let width = String::from_utf8_lossy(&cols_cmd.stdout[..cols_cmd.stdout.len() - 1])
-            .parse()
-            .map_err(|_| UIError::MissingSystemReq(String::from("tput cols")))?;
+        #[allow(clippy::indexing_slicing)]
+        let height = String::from_utf8_lossy(
+            &lines_cmd.stdout[..lines_cmd.stdout.len().checked_sub(1).ok_or_else(|| {
+                UIError::MissingSystemReq(String::from("`tput lines` gave empty output"))
+            })?],
+        )
+        .parse()
+        .map_err(|err| {
+            UIError::MissingSystemReq(format!(
+                "failed to parse `tput lines` as a usize: {:?}",
+                err
+            ))
+        })?;
+        #[allow(clippy::integer_arithmetic)]
+        if height >= (usize::MAX - 1) {
+            return Err(UIError::UnreasonableDimensions {
+                width: None,
+                height: Some(height),
+            });
+        }
+        #[allow(clippy::indexing_slicing)]
+        let width = String::from_utf8_lossy(
+            &cols_cmd.stdout[..cols_cmd.stdout.len().checked_sub(1).ok_or_else(|| {
+                UIError::MissingSystemReq(String::from("`tput cols` gave empty output"))
+            })?],
+        )
+        .parse()
+        .map_err(|err| {
+            UIError::MissingSystemReq(format!("failed to parse `tput cols` as a usize: {:?}", err))
+        })?;
+        #[allow(clippy::integer_arithmetic)]
+        if width >= (usize::MAX - 1) {
+            return Err(UIError::UnreasonableDimensions {
+                width: Some(width),
+                height: Some(height),
+            });
+        }
         Ok(Term {
             width,
             height,
@@ -162,6 +194,7 @@ impl Term {
 
 impl ops::Drop for Term {
     fn drop(&mut self) {
-        Term::cleanup()
+        #[allow(clippy::expect_used)]
+        Term::cleanup().expect("failed to cleanup term");
     }
 }

@@ -21,9 +21,9 @@ pub trait UI {
 pub enum Event {
     NormalChar(char),
     SpecialChar(EscapeSeq),
-    Resize,
 }
 
+#[allow(clippy::enum_variant_names)]
 #[derive(Clone, Debug, Copy)]
 pub enum EscapeSeq {
     LeftArrow,
@@ -32,6 +32,7 @@ pub enum EscapeSeq {
     DownArrow,
 }
 
+#[allow(dead_code)]
 #[derive(Clone, Debug, Copy)]
 pub enum Colour {
     White,
@@ -46,4 +47,8 @@ pub enum UIError {
     IOErr(io::Error),
     ProcFailed(ExitStatus),
     MissingSystemReq(String),
+    UnreasonableDimensions {
+        width: Option<usize>,
+        height: Option<usize>,
+    },
 }
