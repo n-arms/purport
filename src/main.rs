@@ -15,7 +15,7 @@ use backend::editor::Editor;
 use frontend::ui::{EscapeSeq, Event, UI};
 use frontend::unix_term::Term;
 use std::env::args;
-use std::fs;
+
 
 fn main() {
     let mut term = Term::sys_default().expect("failed to spawn system default terminal");
@@ -24,7 +24,7 @@ fn main() {
     let fp = args()
         .nth(1);
 
-    ed.load_into(0, fp.clone());
+    ed.load_into(0, fp);
     ed.draw(&mut term).expect("failed to get next event");
     term.refresh().expect("failed to refresh ui");
 
@@ -40,6 +40,7 @@ fn main() {
                 ed.pane.move_cursor_left_right(&ed.buffers, 1)
             }
             Event::NormalChar('\x11') => break, // Ctrl-q
+            Event::NormalChar('\x13') => ed.save(0),
             Event::NormalChar('\x7f') => ed.pane.backspace(&mut ed.buffers),
             Event::NormalChar(c) => ed.pane.insert_char(&mut ed.buffers, c),
         }.unwrap();
@@ -47,7 +48,7 @@ fn main() {
         term.refresh().expect("failed to refresh ui");
     }
     term.refresh().expect("failed to refresh ui");
-
+/*
     fp.map(|fp| {
         fs::write(
             fp,
@@ -67,4 +68,5 @@ fn main() {
                 }),
         ).ok()
     });
+    */
 }

@@ -2,6 +2,7 @@ use super::cursor::{Cursor, Offset};
 use super::pane::{Char, Pane};
 use crate::frontend::ui::UI;
 use std::fs;
+use std::io;
 
 #[derive(Clone, Debug)]
 pub struct Editor {
@@ -13,9 +14,10 @@ pub struct Editor {
 pub struct Buffer {
     pub lines: Vec<Vec<char>>,
     pub file_name: Option<String>,
+    pub dirty: bool
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub enum Error {
     BufferClosedPrematurely(usize),
     InvalidHeight(usize),
@@ -30,7 +32,8 @@ pub enum Error {
     CursorPastEnd {
         cursor: usize,
         pos: usize,
-    }
+    },
+    IOErr(io::Error)
 }
 
 impl Editor {
@@ -39,6 +42,7 @@ impl Editor {
             buffers: vec![Buffer {
                 lines: vec![Vec::new()],
                 file_name: None,
+                dirty: false
             }],
             pane: Pane {
                 width,
@@ -65,6 +69,34 @@ impl Editor {
             });
         buffer.file_name = file_name;
         Some(())
+    }
+
+    pub fn save(&mut self, buffer_id: usize) -> Result<(), Error> {
+        let mut buffer = self.buffers.get_mut(buffer_id).ok_or(Error::BufferClosedPrematurely(buffer_id))?;
+        if let Some(fp) = &buffer.file_name {
+            fs::write(
+                fp,
+                buffer
+                    .lines
+                    .iter()
+                    .map(|line| {
+                        line.iter().fold(String::new(), |mut acc, x| {
+                            acc.push(*x);
+                            acc
+                        })
+                    })
+                    .fold(String::new(), |mut acc, x| {
+                        acc.push_str(&x);
+                        acc.push('\n');
+                        acc
+                    }),
+            ).map_err(Error::IOErr)?;
+        } else {
+            todo!("implement save as");
+        }
+
+        buffer.dirty = false;
+        Ok(())
     }
 
     pub fn draw(&self, ui: &mut impl UI) -> Result<(), Error> {
@@ -95,7 +127,6 @@ impl Editor {
                     Char::Background(c) => ui.set_background(c),
                 }
             }
-            #[allow(clippy::integer_arithmetic)]
             ui.move_cursor(
                 self.pane.cursor.row + 1 - self.pane.offset.row, 
                 self.pane.cursor.col + 3 - self.pane.offset.col

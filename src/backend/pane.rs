@@ -58,6 +58,7 @@ impl Pane {
             let buffer = buffers
                 .get_mut(self.buffer_id)
                 .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
+            buffer.dirty = true;
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
                 if line.len() < self.cursor.col {
                     return Err(Error::CursorPastEnd {
@@ -79,6 +80,7 @@ impl Pane {
             let buffer = buffers
                 .get_mut(self.buffer_id)
                 .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
+            buffer.dirty = true;
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
                 if self.cursor.col > line.len() {
                     return Err(Error::CursorPastEnd {
@@ -105,6 +107,7 @@ impl Pane {
         let buffer = buffers
             .get_mut(self.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
+        buffer.dirty = true;
         if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
             if self.cursor.col == 0 && self.cursor.row == 0 {
                 Ok(())
@@ -159,24 +162,19 @@ impl Pane {
             row: 0,
             max_row: self.height,
             max_col: self.width,
-            status_bar: StatusBar {
-                file_name: buffer
-                    .file_name
-                    .as_ref()
-                    .cloned()
-                    .unwrap_or_else(|| String::from("[No Name]")),
-                line: self.cursor.row,
-                lines: buffer.lines.len(),
-            },
+            status_bar: vec![
+                buffer.file_name.as_ref().cloned().unwrap_or_else(|| String::from("[No Name]")),
+                if buffer.dirty {
+                    String::from(" | + | ")
+                } else {
+                    String::from(" ")
+                },
+                (self.cursor.row + 1).to_string(),
+                String::from(":"),
+                buffer.lines.len().to_string(),
+            ]
         })
     }
-}
-
-#[derive(Debug, Clone)]
-pub struct StatusBar {
-    file_name: String,
-    line: usize,
-    lines: usize,
 }
 
 pub struct TextIter<'a, L: Iterator<Item = &'a char>, Text: Iterator<Item = L>> {
@@ -184,7 +182,7 @@ pub struct TextIter<'a, L: Iterator<Item = &'a char>, Text: Iterator<Item = L>> 
     row: usize,
     max_row: usize,
     max_col: usize,
-    status_bar: StatusBar,
+    status_bar: Vec<String>,
 }
 
 impl<'a, L, Text> Iterator for TextIter<'a, L, Text>
@@ -200,7 +198,7 @@ where
             Some(LineIter {
                 max_col: self.max_col,
                 col: 0,
-                line: Line::StatusBar(self.status_bar.clone()),
+                line: Line::StatusBar(self.status_bar.clone(), 0, 0),
             })
         } else if self.max_row.checked_sub(1).map(|row| row > self.row)? {
             self.row += 1; // same reasoning as above
@@ -216,7 +214,7 @@ where
 }
 
 pub enum Line<'a, L: Iterator<Item = &'a char>> {
-    StatusBar(StatusBar),
+    StatusBar(Vec<String>, usize, usize),
     Normal(u8, L),
     Empty,
 }
@@ -247,52 +245,27 @@ impl<'a, L: Iterator<Item = &'a char>> Iterator for LineIter<'a, L> {
                     Char::Normal(' ')
                 }
                 Line::Normal(_, l) => Char::Normal(l.next().copied().unwrap_or(' ')),
-                Line::StatusBar(StatusBar {
-                    file_name,
-                    line,
-                    lines,
-                }) => {
-                    let line_str = line.to_string();
-                    let max_line_str = lines.to_string();
-                    // col cannot be 0, as we already added 1 to it
+                Line::StatusBar(v, index, block) => {
                     if self.col == 1 {
                         Char::Background(Colour::Red)
-                    } else if self.col - 1 <= file_name.len() {
-                        // col is >= 2
-                        Char::Normal(
-                            file_name
-                                .chars()
-                                .nth(self.col - 2)
-                                .expect("unreachable due to bounds checks in if statement"),
-                        )
-                    } else if self.col - 2 == file_name.len() {
-                        // col is >= 2
+                    } else if *block >= v.len() {
                         Char::Normal(' ')
-                    } else if self.col - file_name.len() - 3 < line_str.len() {
-                        // col >= 3 + file_name.len
-                        Char::Normal(
-                            line_str
-                                .chars()
-                                .nth(self.col - file_name.len() - 3)
-                                .expect("unreachable due to bounds checks in if statement"),
-                        ) // the panic is unreachable
-                    } else if self.col - file_name.len() - line_str.len() == 3 {
-                        Char::Normal(':')
-                    } else if self.col - file_name.len() - line_str.len() - 4 < max_line_str.len() {
-                        // col >= 4 + file_name.len + line_str.len
-                        Char::Normal(
-                            max_line_str
-                                .chars()
-                                .nth(self.col - file_name.len() - line_str.len() - 4)
-                                .expect("unreachable due to bounds checks in if statement"),
-                        ) // the panic is unreachable
+                    } else if v[*block].len() <= (self.max_col - self.col - 1) {
+                        if *index == v[*block].len() - 1 {
+                            *index = 0;
+                            *block += 1;
+                            Char::Normal(v[*block - 1].chars().nth(v[*block - 1].len() - 1).expect("unreachable"))
+                        } else {
+                            *index += 1;
+                            Char::Normal(v[*block].chars().nth(*index - 1).expect("unreachable"))
+                        }
                     } else {
-                        Char::Normal(' ')
+                        return None;
                     }
                 }
             };
             Some(c)
-        } else if self.max_col == self.col && matches!(self.line, Line::StatusBar(_)) {
+        } else if self.max_col == self.col && matches!(self.line, Line::StatusBar(..)) {
             self.col = self.col
                 .checked_add(1)
                 .expect("overflow: the width of the pane is == usize::MAX");

@@ -107,7 +107,7 @@ impl UI for Term {
 
 impl Term {
     fn cleanup() -> io::Result<()> {
-        print!("\x1b[?25h");
+        print!("\x1b[?25h\x1b[2J\x1b[;H");
         io::stdout().flush()?;
 
         Command::new("stty")
