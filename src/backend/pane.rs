@@ -129,51 +129,66 @@ impl Pane {
         }
     }
 
-    pub fn display<'a>(&self, buffers: &'a [Buffer], welcome: &'a [Vec<char>]) -> Result<PaneIter<'a>, Error> {
+    pub fn display<'a>(&self, buffers: &'a [Buffer]) -> Result<Iter<'a>, Error> {
         let buffer = buffers
             .get(self.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
-        let mut status_bar = buffer.file_name.as_ref().cloned().unwrap_or_else(|| String::from("[No Name]"));
-        status_bar.push_str(if buffer.dirty {" | + | "} else {" "});
-        status_bar.push_str(&(self.cursor.row + 1).to_string());
-        status_bar.push(':');
-        status_bar.push_str(&buffer.lines.len().to_string());
-        Ok(PaneIter {
-            text: if buffer.lines.len() < self.offset.row {None} else {
+
+        let status_bar = if buffer.is_norm {
+            let mut status_bar = buffer
+                .file_name
+                .as_ref()
+                .cloned()
+                .unwrap_or_else(|| String::from("[No Name]"));
+            status_bar.push_str(if buffer.dirty { " | + | " } else { " " });
+            status_bar.push_str(&(self.cursor.row + 1).to_string());
+            status_bar.push(':');
+            status_bar.push_str(&buffer.lines.len().to_string());
+            Some(status_bar)
+        } else {
+            None
+        };
+
+        Ok(Iter {
+            text: if buffer.lines.len() < self.offset.row {
+                None
+            } else {
                 Some(&buffer.lines[self.offset.row..])
             },
             col_offset: self.offset.col,
             height: self.height,
             row: 0,
-            status_bar: Some(status_bar),
-            width: self.width
+            status_bar,
+            width: self.width,
+            draw_tildes: buffer.is_norm,
         })
     }
 }
 
-pub struct PaneIter<'a> {
+pub struct Iter<'a> {
     text: Option<&'a [Vec<char>]>,
     col_offset: usize,
     width: usize,
     height: usize,
     status_bar: Option<String>,
-    row: usize
+    row: usize,
+    draw_tildes: bool,
 }
 
 pub enum Row<'a> {
     Normal(&'a [char]),
     Empty,
-    StatusBar(String)
+    StatusBar(String),
 }
 
 pub struct RowIter<'a> {
     row: Row<'a>,
     col: usize,
     width: usize,
+    draw_tildes: bool,
 }
 
-
-impl<'a> Iterator for PaneIter<'a> {
+impl<'a> Iterator for Iter<'a> {
     type Item = RowIter<'a>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.row < self.height {
@@ -182,19 +197,21 @@ impl<'a> Iterator for PaneIter<'a> {
                 Some(RowIter {
                     row: Row::StatusBar(self.status_bar.as_ref().unwrap().clone()),
                     col: 0,
-                    width: self.width
+                    width: self.width,
+                    draw_tildes: self.draw_tildes,
                 })
             } else {
                 self.row += 1;
                 let row = self.text.and_then(|text| text.get(self.row - 1));
                 Some(RowIter {
-                    row: if self.col_offset >= row.map(Vec::len).unwrap_or(0) {
+                    row: if self.col_offset >= row.map_or(0, Vec::len) {
                         Row::Empty
                     } else {
                         Row::Normal(&row.unwrap()[self.col_offset..])
                     },
                     col: 0,
-                    width: self.width
+                    width: self.width,
+                    draw_tildes: self.draw_tildes,
                 })
             }
         } else {
@@ -207,30 +224,46 @@ impl<'a> Iterator for RowIter<'a> {
     type Item = Char;
     fn next(&mut self) -> Option<Self::Item> {
         match &mut self.row {
-            Row::Normal(r) => if self.col < self.width {
-                self.col += 1;
-                if self.col == 1 {
-                    Some(Char::Normal('~'))
-                } else if self.col == 2 {
+            Row::Normal(r) => {
+                if self.col < self.width {
+                    self.col += 1;
+                    if self.draw_tildes {
+                        if self.col == 1 {
+                            Some(Char::Normal('~'))
+                        } else if self.col == 2 {
+                            Some(Char::Normal(' '))
+                        } else {
+                            Some(Char::Normal(r.get(self.col - 3).copied().unwrap_or(' ')))
+                        }
+                    } else {
+                        Some(Char::Normal(r.get(self.col - 1).copied().unwrap_or(' ')))
+                    }
+                } else {
+                    None
+                }
+            }
+            Row::Empty => {
+                if self.col < self.width {
+                    self.col += 1;
                     Some(Char::Normal(' '))
                 } else {
-                    Some(Char::Normal(r.get(self.col - 3).copied().unwrap_or(' ')))
+                    None
                 }
-            } else {None}, 
-            Row::Empty => if self.col < self.width {
-                self.col += 1;
-                Some(Char::Normal(' '))
-            } else {None},
-            Row::StatusBar(sb) => if self.col == 0 {
-                self.col += 1;
-                Some(Char::Background(Colour::Red))
-            } else if self.col < self.width + 1 {
-                self.col += 1;
-                Some(Char::Normal(sb.chars().nth(self.col - 2).unwrap_or(' ')))
-            } else if self.col == self.width + 1 {
-                self.col += 1;
-                Some(Char::Background(Colour::Reset))
-            } else {None}
+            }
+            Row::StatusBar(sb) => {
+                if self.col == 0 {
+                    self.col += 1;
+                    Some(Char::Background(Colour::Red))
+                } else if self.col < self.width + 1 {
+                    self.col += 1;
+                    Some(Char::Normal(sb.chars().nth(self.col - 2).unwrap_or(' ')))
+                } else if self.col == self.width + 1 {
+                    self.col += 1;
+                    Some(Char::Background(Colour::Reset))
+                } else {
+                    None
+                }
+            }
         }
     }
 }

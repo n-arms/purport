@@ -1,4 +1,4 @@
-use super::ui::{Colour, EscapeSeq, Event, UIError, UI};
+use super::ui::{Colour, Error, EscapeSeq, Event, UI};
 use std::io::{self, Read, Write};
 use std::ops;
 use std::process::{Command, Stdio};
@@ -44,16 +44,16 @@ impl UI for Term {
             "call to increase current row beyond the max"
         );
     }
-    fn next_event(&mut self) -> Result<Event, UIError> {
+    fn next_event(&mut self) -> Result<Event, Error> {
         let c = io::stdin()
             .bytes()
             .nth(0)
-            .ok_or(UIError::FailedStdinRead)?
-            .map_err(UIError::IOErr)?;
+            .ok_or(Error::FailedStdinRead)?
+            .map_err(Error::IOErr)?;
         if c == b'\x1b' {
             let mut esc = String::new();
             for byte in io::stdin().bytes() {
-                esc.push(byte.map(|b| b as char).map_err(UIError::IOErr)?);
+                esc.push(byte.map(|b| b as char).map_err(Error::IOErr)?);
                 match esc.as_str() {
                     "[A" => return Ok(Event::SpecialChar(EscapeSeq::UpArrow)),
                     "[B" => return Ok(Event::SpecialChar(EscapeSeq::DownArrow)),
@@ -62,7 +62,7 @@ impl UI for Term {
                     _ => (),
                 }
             }
-            Err(UIError::FailedStdinRead)
+            Err(Error::FailedStdinRead)
         } else {
             Ok(Event::NormalChar(c as char))
         }
@@ -85,9 +85,9 @@ impl UI for Term {
             Colour::Reset => "\x1b[0m",
         });
     }
-    fn refresh(&mut self) -> Result<(), UIError> {
+    fn refresh(&mut self) -> Result<(), Error> {
         print!("\x1b[?25l\x1b[H");
-        io::stdout().flush().map_err(UIError::IOErr)?;
+        io::stdout().flush().map_err(Error::IOErr)?;
         self.row = 0;
         let max = self.buffer.len();
         #[allow(clippy::integer_arithmetic)]
@@ -101,7 +101,7 @@ impl UI for Term {
             *line = String::new();
         }
         print!("\x1b[?25h\x1b[{};{}H", self.cursor_row, self.cursor_col);
-        io::stdout().flush().map_err(UIError::IOErr)
+        io::stdout().flush().map_err(Error::IOErr)
     }
 }
 
@@ -117,49 +117,49 @@ impl Term {
         Ok(())
     }
 
-    pub fn sys_default() -> Result<Self, UIError> {
+    pub fn sys_default() -> Result<Self, Error> {
         let raw_cmd = Command::new("stty")
             .arg("-echo")
             .arg("raw")
             .stdin(Stdio::inherit())
             .output()
-            .map_err(UIError::IOErr)?;
+            .map_err(Error::IOErr)?;
         if !raw_cmd.status.success() {
-            Term::cleanup().map_err(UIError::IOErr)?;
-            return Err(UIError::ProcFailed(raw_cmd.status));
+            Term::cleanup().map_err(Error::IOErr)?;
+            return Err(Error::ProcFailed(raw_cmd.status));
         }
         let lines_cmd = Command::new("tput")
             .arg("lines")
             .output()
-            .map_err(UIError::IOErr)?;
+            .map_err(Error::IOErr)?;
         if !lines_cmd.status.success() {
-            Term::cleanup().map_err(UIError::IOErr)?;
-            return Err(UIError::ProcFailed(lines_cmd.status));
+            Term::cleanup().map_err(Error::IOErr)?;
+            return Err(Error::ProcFailed(lines_cmd.status));
         }
         let cols_cmd = Command::new("tput")
             .arg("cols")
             .output()
-            .map_err(UIError::IOErr)?;
+            .map_err(Error::IOErr)?;
         if !cols_cmd.status.success() {
-            Term::cleanup().map_err(UIError::IOErr)?;
-            return Err(UIError::ProcFailed(cols_cmd.status));
+            Term::cleanup().map_err(Error::IOErr)?;
+            return Err(Error::ProcFailed(cols_cmd.status));
         }
         #[allow(clippy::indexing_slicing)]
         let height = String::from_utf8_lossy(
             &lines_cmd.stdout[..lines_cmd.stdout.len().checked_sub(1).ok_or_else(|| {
-                UIError::MissingSystemReq(String::from("`tput lines` gave empty output"))
+                Error::MissingSystemReq(String::from("`tput lines` gave empty output"))
             })?],
         )
         .parse()
         .map_err(|err| {
-            UIError::MissingSystemReq(format!(
+            Error::MissingSystemReq(format!(
                 "failed to parse `tput lines` as a usize: {:?}",
                 err
             ))
         })?;
         #[allow(clippy::integer_arithmetic)]
         if height >= (usize::MAX - 1) {
-            return Err(UIError::UnreasonableDimensions {
+            return Err(Error::UnreasonableDimensions {
                 width: None,
                 height: Some(height),
             });
@@ -167,16 +167,16 @@ impl Term {
         #[allow(clippy::indexing_slicing)]
         let width = String::from_utf8_lossy(
             &cols_cmd.stdout[..cols_cmd.stdout.len().checked_sub(1).ok_or_else(|| {
-                UIError::MissingSystemReq(String::from("`tput cols` gave empty output"))
+                Error::MissingSystemReq(String::from("`tput cols` gave empty output"))
             })?],
         )
         .parse()
         .map_err(|err| {
-            UIError::MissingSystemReq(format!("failed to parse `tput cols` as a usize: {:?}", err))
+            Error::MissingSystemReq(format!("failed to parse `tput cols` as a usize: {:?}", err))
         })?;
         #[allow(clippy::integer_arithmetic)]
         if width >= (usize::MAX - 1) {
-            return Err(UIError::UnreasonableDimensions {
+            return Err(Error::UnreasonableDimensions {
                 width: Some(width),
                 height: Some(height),
             });

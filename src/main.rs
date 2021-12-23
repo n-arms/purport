@@ -11,28 +11,28 @@
 mod backend;
 mod frontend;
 
-use backend::editor::Editor;
-use frontend::ui::UI;
+use backend::editor::{Editor, Error};
 use frontend::unix_term::Term;
 use std::env::args;
 
-fn main() {
-    let mut term = Term::sys_default().expect("failed to spawn system default terminal");
-    let mut ed = Editor::open(term.width(), term.height());
+fn main() -> Result<(), Error> {
+    let term = Term::sys_default().map_err(Error::UIErr)?;
+    let mut ed = Editor::open(term)?;
 
     let fp = args().nth(1);
+    ed.load_into(1, fp);
+    ed.mainloop()?;
 
-    ed.load_into(0, fp);
-    ed.draw(&mut term).expect("failed to get next event");
-    term.refresh().expect("failed to refresh ui");
-
-    loop {
-        let ev = term.next_event().expect("failed to get next event");
-        if ed.process_event(ev).expect("error in editor") {
-            break;
-        }
-        ed.draw(&mut term).expect("failed to draw to term");
-        term.refresh().expect("failed to refresh ui");
-    }
-    term.refresh().expect("failed to refresh ui");
+    Ok(())
 }
+
+/*
+use std::io::{self, Read, Write};
+fn main() {
+    let term = Term::sys_default().unwrap();
+    for (byte, _) in io::stdin().bytes().zip(0..10) {
+        println!("{:?}", byte);
+    }
+    drop(term);
+}
+*/

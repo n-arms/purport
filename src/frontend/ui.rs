@@ -6,10 +6,10 @@ pub trait UI {
     fn newln(&mut self);
     fn set_foreground(&mut self, colour: Colour);
     fn set_background(&mut self, colour: Colour);
-    fn next_event(&mut self) -> Result<Event, UIError>;
+    fn next_event(&mut self) -> Result<Event, Error>;
     fn width(&self) -> usize;
     fn height(&self) -> usize;
-    fn refresh(&mut self) -> Result<(), UIError>;
+    fn refresh(&mut self) -> Result<(), Error>;
     fn move_cursor(&mut self, row: usize, col: usize);
     fn drawln(&mut self, text: &str) {
         self.draw(text);
@@ -42,7 +42,7 @@ pub enum Colour {
 }
 
 #[derive(Debug)]
-pub enum UIError {
+pub enum Error {
     FailedStdinRead,
     IOErr(io::Error),
     ProcFailed(ExitStatus),
