@@ -32,9 +32,7 @@ impl Pane {
         let buffer = buffers
             .get(self.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
-        if self.height == 0 {
-            return Err(Error::InvalidHeight(self.height));
-        }
+        debug_assert_ne!(self.height, 0, "the height of the pane cannot be 0");
         #[allow(clippy::integer_arithmetic)]
         self.cursor.move_up_down(
             buffer,
@@ -57,12 +55,7 @@ impl Pane {
                 .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
             buffer.dirty = true;
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
-                if line.len() < self.cursor.col {
-                    return Err(Error::CursorPastEnd {
-                        cursor: self.cursor.col,
-                        pos: line.len(),
-                    });
-                }
+                debug_assert!(line.len() >= self.cursor.col, "cursor has moved past the end of the line");
                 #[allow(clippy::indexing_slicing)]
                 let rest = line[self.cursor.col..].to_vec();
                 line.truncate(self.cursor.col);
@@ -79,12 +72,7 @@ impl Pane {
                 .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
             buffer.dirty = true;
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
-                if self.cursor.col > line.len() {
-                    return Err(Error::CursorPastEnd {
-                        cursor: self.cursor.col,
-                        pos: line.len(),
-                    });
-                }
+                debug_assert!(line.len() >= self.cursor.col, "cursor has moved past the end of the line");
                 #[allow(clippy::indexing_slicing)]
                 let rest = &line[self.cursor.col..].to_owned();
                 line.truncate(self.cursor.col);
@@ -129,7 +117,7 @@ impl Pane {
         }
     }
 
-    pub fn display<'a>(&self, buffers: &'a [Buffer]) -> Result<Iter<'a>, Error> {
+    pub fn display<'a>(&self, buffers: &'a [Buffer], default: &'a [Vec<char>]) -> Result<Iter<'a>, Error> {
         let buffer = buffers
             .get(self.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
@@ -150,7 +138,9 @@ impl Pane {
         };
 
         Ok(Iter {
-            text: if buffer.lines.len() < self.offset.row {
+            text: if buffer.lines == vec![Vec::new()] {
+                Some(default)
+            } else if buffer.lines.len() < self.offset.row {
                 None
             } else {
                 Some(&buffer.lines[self.offset.row..])
@@ -177,13 +167,14 @@ pub struct Iter<'a> {
 
 pub enum Row<'a> {
     Normal(&'a [char]),
-    Empty,
+    Empty{part_of_file: bool},
     StatusBar(String),
 }
 
 pub struct RowIter<'a> {
     row: Row<'a>,
     col: usize,
+    line: usize,
     width: usize,
     draw_tildes: bool,
 }
@@ -199,19 +190,23 @@ impl<'a> Iterator for Iter<'a> {
                     col: 0,
                     width: self.width,
                     draw_tildes: self.draw_tildes,
+                    line: self.row
                 })
             } else {
                 self.row += 1;
                 let row = self.text.and_then(|text| text.get(self.row - 1));
                 Some(RowIter {
-                    row: if self.col_offset >= row.map_or(0, Vec::len) {
-                        Row::Empty
+                    row: if row.map(Vec::len).map(|row| self.col_offset >= row).unwrap_or(false) {
+                        Row::Empty{part_of_file: true}
+                    } else if row.is_none() {
+                        Row::Empty{part_of_file: false}
                     } else {
                         Row::Normal(&row.unwrap()[self.col_offset..])
                     },
                     col: 0,
                     width: self.width,
                     draw_tildes: self.draw_tildes,
+                    line: self.row
                 })
             }
         } else {
@@ -224,30 +219,49 @@ impl<'a> Iterator for RowIter<'a> {
     type Item = Char;
     fn next(&mut self) -> Option<Self::Item> {
         match &mut self.row {
-            Row::Normal(r) => {
+            Row::Normal(_) | Row::Empty{part_of_file: true} => {
                 if self.col < self.width {
                     self.col += 1;
                     if self.draw_tildes {
                         if self.col == 1 {
-                            Some(Char::Normal('~'))
+                            if self.line > 99 {
+                                Some(Char::Normal((((self.line / 100) % 10) as u8 + 48) as char))
+                            } else {
+                                Some(Char::Normal(' '))
+                            }
                         } else if self.col == 2 {
+                            if self.line > 9 {
+                                Some(Char::Normal((((self.line / 10) % 10) as u8 + 48) as char))
+                            } else {
+                                Some(Char::Normal(' '))
+                            }
+                        } else if self.col == 3 {
+                            Some(Char::Normal(((self.line % 10) as u8 + 48) as char))
+                        } else if self.col == 4 {
                             Some(Char::Normal(' '))
+                        } else if let Row::Normal(r) = &mut self.row {
+                            Some(Char::Normal(r.get(self.col - 5).copied().unwrap_or(' ')))
                         } else {
-                            Some(Char::Normal(r.get(self.col - 3).copied().unwrap_or(' ')))
+                            Some(Char::Normal(' '))
                         }
-                    } else {
+                    } else if let Row::Normal(r) = self.row {
                         Some(Char::Normal(r.get(self.col - 1).copied().unwrap_or(' ')))
+                    } else {
+                        Some(Char::Normal(' '))
                     }
                 } else {
                     None
                 }
             }
-            Row::Empty => {
-                if self.col < self.width {
+            Row::Empty{part_of_file} => {
+                if self.col >= self.width {
+                    None
+                } else if *part_of_file && self.col == 0 {
+                    self.col += 1;
+                    Some(Char::Normal('~'))
+                } else {
                     self.col += 1;
                     Some(Char::Normal(' '))
-                } else {
-                    None
                 }
             }
             Row::StatusBar(sb) => {

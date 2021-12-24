@@ -1,0 +1,3 @@
+   Compiling purport v0.1.0 (/home/n-arms/Documents/code/rust/purport)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.56s
+     Running `target/debug/purport`

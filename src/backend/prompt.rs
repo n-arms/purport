@@ -1,6 +1,6 @@
 use super::cursor::{Cursor, Offset};
 use super::editor::{Buffer, Error};
-use super::pane::{Pane, Iter};
+use super::pane::{Iter, Pane};
 use std::convert::TryInto;
 
 #[derive(Debug, Clone)]
@@ -36,7 +36,10 @@ impl Prompt {
         if dist < 0 {
             self.pane.move_cursor_left_right(
                 buffers,
-                dist.max(-TryInto::<isize>::try_into(self.pane.cursor.col - self.prompt_text_len).expect("overflow")),
+                dist.max(
+                    -TryInto::<isize>::try_into(self.pane.cursor.col - self.prompt_text_len)
+                        .expect("overflow"),
+                ),
             )
         } else {
             self.pane.move_cursor_left_right(buffers, dist)
@@ -52,17 +55,16 @@ impl Prompt {
     }
 
     pub fn display<'a>(&self, buffers: &'a [Buffer]) -> Result<Iter<'a>, Error> {
-        self.pane.display(buffers)
+        self.pane.display(buffers, &[])
     }
 
     pub fn take(&self, buffers: &[Buffer]) -> Result<String, Error> {
         let buffer = buffers
             .get(self.pane.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.pane.buffer_id))?;
+        debug_assert_ne!(buffer.lines.len(), 0, "the buffer is empty");
         Ok(buffer
-            .lines
-            .get(0)
-            .ok_or(Error::InvalidHeight(0))?
+            .lines[0]
             .iter()
             .skip(self.prompt_text_len)
             .collect())

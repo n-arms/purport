@@ -30,19 +30,6 @@ pub enum Mode {
 #[derive(Debug)]
 pub enum Error {
     BufferClosedPrematurely(usize),
-    InvalidHeight(usize),
-    OffsetGreaterThanCursor {
-        cursor: usize,
-        offset: usize,
-    },
-    CursorOffScreen {
-        cursor_on_screen: usize,
-        screen_size: usize,
-    },
-    CursorPastEnd {
-        cursor: usize,
-        pos: usize,
-    },
     IOErr(io::Error),
     UIErr(ui::Error),
 }
@@ -124,16 +111,24 @@ impl<U: UI> Editor<U> {
                     }),
             )
             .map_err(Error::IOErr)?;
+            buffer.dirty = false;
         } else {
-            todo!("implement save as");
+            let new_name = Some(self.prompt("Enter the file name: ")?);
+            let mut buffer = self
+                .buffers
+                .get_mut(buffer_id)
+                .ok_or(Error::BufferClosedPrematurely(buffer_id))?;
+            buffer.file_name = new_name;
+            self.save(buffer_id)?;
         }
-
-        buffer.dirty = false;
         Ok(())
     }
 
     pub fn draw(&mut self) -> Result<(), Error> {
-        let lines = self.pane.display(&self.buffers)?;
+        let margin = "\n".repeat(if self.pane.height <= self.pane.height / 3 + 5 {0} else {self.pane.height / 3});
+        let indent = " ".repeat(if self.pane.width <= self.pane.width / 2 - 15 {0} else {self.pane.width / 2 - 15});
+        let welcome: Vec<Vec<char>> = format!("{}{}Welcome to Purport\n\n{}Ctrl-S to save\n{}Ctrl-Q to quit", margin, indent, indent, indent).split('\n').map(|line| line.chars().collect()).collect();
+        let lines = self.pane.display(&self.buffers, &welcome[..])?;
         let mut first = true;
         for line in lines.chain(self.prompt.display(&self.buffers)?) {
             if !first {
@@ -149,7 +144,7 @@ impl<U: UI> Editor<U> {
             }
             self.ui.move_cursor(
                 self.pane.cursor.row + 1 - self.pane.offset.row,
-                self.pane.cursor.col + 3 - self.pane.offset.col,
+                self.pane.cursor.col + 5 - self.pane.offset.col,
             );
         }
         Ok(())
@@ -182,7 +177,28 @@ impl<U: UI> Editor<U> {
                 }
                 Ok(())
             }
-            Event::NormalChar('\x11') => return Ok(true),
+            Event::NormalChar('\x11') => {
+                return Ok(
+                    if self
+                        .buffers
+                        .get(self.pane.buffer_id)
+                        .ok_or(Error::BufferClosedPrematurely(self.pane.buffer_id))?
+                        .dirty
+                    {
+                        let mut should_quit = String::new();
+                        while should_quit != "y" && should_quit != "n" {
+                            should_quit = self
+                                .prompt(
+                                    "This file has unsaved changes do you want to quit (y/n): ",
+                                )?
+                                .to_ascii_lowercase();
+                        }
+                        should_quit == "y"
+                    } else {
+                        true
+                    },
+                );
+            }
             Event::NormalChar('\x13') => self.save(self.pane.buffer_id),
             Event::NormalChar('\x7f') => self.pane.backspace(&mut self.buffers),
             Event::NormalChar(c) => self.pane.insert_char(&mut self.buffers, *c),
@@ -213,7 +229,7 @@ impl<U: UI> Editor<U> {
             }?;
             self.refresh()?;
         }
-
+        self.buffers[0].lines = vec![Vec::new()];
         Ok(res)
     }
 

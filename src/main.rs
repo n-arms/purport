@@ -23,6 +23,8 @@ fn main() -> Result<(), Error> {
     ed.load_into(1, fp);
     ed.mainloop()?;
 
+    println!("thanks for editing with purport!");
+
     Ok(())
 }
 
@@ -33,6 +35,5 @@ fn main() {
     for (byte, _) in io::stdin().bytes().zip(0..10) {
         println!("{:?}", byte);
     }
-    drop(term);
 }
 */
