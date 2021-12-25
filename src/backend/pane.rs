@@ -1,6 +1,8 @@
 use super::cursor::{Cursor, Offset};
-use super::editor::{Buffer, Error};
+use super::editor::Error;
+use super::buffer::*;
 use crate::frontend::ui::Colour;
+use unicode_segmentation::UnicodeSegmentation;
 
 #[derive(Clone, Debug, Default)]
 pub struct Pane {
@@ -12,8 +14,9 @@ pub struct Pane {
 }
 
 #[allow(dead_code)]
-#[derive(Debug, Copy, Clone)]
-pub enum Char {
+#[derive(Debug, Clone)]
+pub enum Char<'a> {
+    Grapheme(&'a str),
     Normal(char),
     Foreground(Colour),
     Background(Colour),
@@ -48,8 +51,8 @@ impl Pane {
         self.cursor.row = row;
     }
 
-    pub fn insert_char(&mut self, buffers: &mut [Buffer], c: char) -> Result<(), Error> {
-        if c == '\r' {
+    pub fn insert_grapheme(&mut self, buffers: &mut [Buffer], g: &str) -> Result<(), Error> {
+        if g == "\r" {
             let buffer = buffers
                 .get_mut(self.buffer_id)
                 .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
@@ -57,12 +60,11 @@ impl Pane {
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
                 debug_assert!(line.len() >= self.cursor.col, "cursor has moved past the end of the line");
                 #[allow(clippy::indexing_slicing)]
-                let rest = line[self.cursor.col..].to_vec();
-                line.truncate(self.cursor.col);
+                let rest = line.split_at(self.cursor.col);
                 buffer.lines.insert(self.cursor.row.saturating_add(1), rest); // if the file is usize::MAX lines long this will break
                 self.set_cursor(self.cursor.row.saturating_add(1), 0);
             } else {
-                buffer.lines.push(Vec::new());
+                buffer.lines.push(Line::default());
                 self.move_cursor_up_down(buffers, 1)?;
             }
             Ok(())
@@ -74,13 +76,10 @@ impl Pane {
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
                 debug_assert!(line.len() >= self.cursor.col, "cursor has moved past the end of the line");
                 #[allow(clippy::indexing_slicing)]
-                let rest = &line[self.cursor.col..].to_owned();
-                line.truncate(self.cursor.col);
-                line.push(c);
-                line.extend(rest);
+                line.insert_grapheme(self.cursor.col, g);
                 self.move_cursor_left_right(buffers, 1)?;
             } else {
-                buffer.lines.push(vec![c]);
+                buffer.lines.push(Line::new(String::from(g)));
             }
 
             Ok(())
@@ -101,7 +100,7 @@ impl Pane {
                 if let Some(prev) = buffer.lines.get_mut(self.cursor.row - 1) {
                     // row != 0 due to the above if
                     self.set_cursor(self.cursor.row - 1, prev.len());
-                    prev.extend(old.iter());
+                    prev.merge(&old);
                     buffer.lines.remove(self.cursor.row + 1); // row was decremented by set cursor, so it is less than usize::MAX
                     Ok(())
                 } else {
@@ -117,7 +116,7 @@ impl Pane {
         }
     }
 
-    pub fn display<'a>(&self, buffers: &'a [Buffer], default: &'a [Vec<char>]) -> Result<Iter<'a>, Error> {
+    pub fn display<'a>(&self, buffers: &'a [Buffer], default: &'a [Line]) -> Result<Iter<'a>, Error> {
         let buffer = buffers
             .get(self.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
@@ -138,7 +137,7 @@ impl Pane {
         };
 
         Ok(Iter {
-            text: if buffer.lines == vec![Vec::new()] {
+            text: if buffer.lines == vec![Line::default()] {
                 Some(default)
             } else if buffer.lines.len() < self.offset.row {
                 None
@@ -156,7 +155,7 @@ impl Pane {
 }
 
 pub struct Iter<'a> {
-    text: Option<&'a [Vec<char>]>,
+    text: Option<&'a [Line]>,
     col_offset: usize,
     width: usize,
     height: usize,
@@ -166,7 +165,7 @@ pub struct Iter<'a> {
 }
 
 pub enum Row<'a> {
-    Normal(&'a [char]),
+    Normal(&'a str),
     Empty{part_of_file: bool},
     StatusBar(String),
 }
@@ -196,12 +195,12 @@ impl<'a> Iterator for Iter<'a> {
                 self.row += 1;
                 let row = self.text.and_then(|text| text.get(self.row - 1));
                 Some(RowIter {
-                    row: if row.map(Vec::len).map(|row| self.col_offset >= row).unwrap_or(false) {
+                    row: if row.map(|l| l.len()).map(|row| self.col_offset >= row).unwrap_or(false) {
                         Row::Empty{part_of_file: true}
                     } else if row.is_none() {
                         Row::Empty{part_of_file: false}
                     } else {
-                        Row::Normal(&row.unwrap()[self.col_offset..])
+                        Row::Normal(&row.unwrap().skip(self.col_offset))
                     },
                     col: 0,
                     width: self.width,
@@ -216,7 +215,7 @@ impl<'a> Iterator for Iter<'a> {
 }
 
 impl<'a> Iterator for RowIter<'a> {
-    type Item = Char;
+    type Item = Char<'a>;
     fn next(&mut self) -> Option<Self::Item> {
         match &mut self.row {
             Row::Normal(_) | Row::Empty{part_of_file: true} => {
@@ -240,12 +239,12 @@ impl<'a> Iterator for RowIter<'a> {
                         } else if self.col == 4 {
                             Some(Char::Normal(' '))
                         } else if let Row::Normal(r) = &mut self.row {
-                            Some(Char::Normal(r.get(self.col - 5).copied().unwrap_or(' ')))
+                            Some(Char::Grapheme(r.graphemes(true).nth(self.col - 5).unwrap_or(" ")))
                         } else {
                             Some(Char::Normal(' '))
                         }
                     } else if let Row::Normal(r) = self.row {
-                        Some(Char::Normal(r.get(self.col - 1).copied().unwrap_or(' ')))
+                        Some(Char::Grapheme(r.graphemes(true).nth(self.col - 1).unwrap_or(" ")))
                     } else {
                         Some(Char::Normal(' '))
                     }

@@ -1,4 +1,5 @@
-use super::editor::{Buffer, Error};
+use super::editor::Error;
+use super::buffer::*;
 use std::convert::TryInto;
 
 #[derive(Copy, Clone, Debug, Default)]
@@ -128,7 +129,7 @@ impl Cursor {
             }
             self.row -= dist_up; // dist up is at most self.row, self.row - self.row = 0
         }
-        let new_line_len = buffer.lines.get(self.row).map_or(0, Vec::len);
+        let new_line_len = buffer.lines.get(self.row).map_or(0, Line::len);
         if new_line_len < self.col {
             self.col = new_line_len;
             if self.col < offset.col {

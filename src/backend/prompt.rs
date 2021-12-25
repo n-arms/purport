@@ -1,7 +1,9 @@
 use super::cursor::{Cursor, Offset};
-use super::editor::{Buffer, Error};
+use super::editor::Error;
+use super::buffer::*;
 use super::pane::{Iter, Pane};
 use std::convert::TryInto;
+use unicode_segmentation::UnicodeSegmentation;
 
 #[derive(Debug, Clone)]
 pub struct Prompt {
@@ -23,8 +25,8 @@ impl Prompt {
             height: 1,
             width,
         };
-        for c in text.chars() {
-            pane.insert_char(buffers, c)?;
+        for g in text[..].graphemes(true) {
+            pane.insert_grapheme(buffers, g)?;
         }
         Ok(Prompt {
             pane,
@@ -46,8 +48,8 @@ impl Prompt {
         }
     }
 
-    pub fn insert_char(&mut self, buffers: &mut [Buffer], c: char) -> Result<(), Error> {
-        self.pane.insert_char(buffers, c)
+    pub fn insert_grapheme(&mut self, buffers: &mut [Buffer], g: &str) -> Result<(), Error> {
+        self.pane.insert_grapheme(buffers, g)
     }
 
     pub fn backspace(&mut self, buffers: &mut [Buffer]) -> Result<(), Error> {
@@ -65,8 +67,7 @@ impl Prompt {
         debug_assert_ne!(buffer.lines.len(), 0, "the buffer is empty");
         Ok(buffer
             .lines[0]
-            .iter()
             .skip(self.prompt_text_len)
-            .collect())
+            .to_string())
     }
 }

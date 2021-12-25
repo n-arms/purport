@@ -1,6 +1,7 @@
 use super::cursor::{Cursor, Offset};
 use super::pane::{Char, Pane};
 use super::prompt::Prompt;
+use super::buffer::*;
 use crate::frontend::ui::{self, EscapeSeq, Event, UI};
 use std::fs;
 use std::io;
@@ -12,14 +13,6 @@ pub struct Editor<U: UI> {
     pub mode: Mode,
     pub prompt: Prompt,
     pub ui: U,
-}
-
-#[derive(Clone, Debug)]
-pub struct Buffer {
-    pub lines: Vec<Vec<char>>,
-    pub file_name: Option<String>,
-    pub dirty: bool,
-    pub is_norm: bool,
 }
 
 #[derive(Clone, Debug, Copy)]
@@ -38,13 +31,13 @@ impl<U: UI> Editor<U> {
     pub fn open(ui: U) -> Result<Self, Error> {
         let mut buffers = vec![
             Buffer {
-                lines: vec![Vec::new()],
+                lines: vec![Line::default()],
                 file_name: None,
                 dirty: false,
                 is_norm: false,
             },
             Buffer {
-                lines: vec![Vec::new()],
+                lines: vec![Line::default()],
                 file_name: None,
                 dirty: false,
                 is_norm: true,
@@ -73,17 +66,18 @@ impl<U: UI> Editor<U> {
             .clone()
             .and_then(|fp| fs::read(&fp).ok())
             .map_or_else(
-                || vec![Vec::new()],
+                || vec![Line::default()],
                 |file| {
                     let mut lines: Vec<_> = String::from_utf8_lossy(file.as_ref())
                         .split('\n')
-                        .map(|line| line.chars().collect())
+                        .map(|line| Line::new(line.chars().collect::<String>()))
                         .collect();
                     lines.truncate(lines.len().saturating_sub(1));
                     lines
                 },
             );
         buffer.file_name = file_name;
+        eprintln!("loaded file into buffer: {:#?}", buffer);
         Some(())
     }
 
@@ -98,12 +92,7 @@ impl<U: UI> Editor<U> {
                 buffer
                     .lines
                     .iter()
-                    .map(|line| {
-                        line.iter().fold(String::new(), |mut acc, x| {
-                            acc.push(*x);
-                            acc
-                        })
-                    })
+                    .map(Line::to_string)
                     .fold(String::new(), |mut acc, x| {
                         acc.push_str(&x);
                         acc.push('\n');
@@ -125,10 +114,13 @@ impl<U: UI> Editor<U> {
     }
 
     pub fn draw(&mut self) -> Result<(), Error> {
+        /*
         let margin = "\n".repeat(if self.pane.height <= self.pane.height / 3 + 5 {0} else {self.pane.height / 3});
         let indent = " ".repeat(if self.pane.width <= self.pane.width / 2 - 15 {0} else {self.pane.width / 2 - 15});
-        let welcome: Vec<Vec<char>> = format!("{}{}Welcome to Purport\n\n{}Ctrl-S to save\n{}Ctrl-Q to quit", margin, indent, indent, indent).split('\n').map(|line| line.chars().collect()).collect();
-        let lines = self.pane.display(&self.buffers, &welcome[..])?;
+        let welcome: Vec<Row> = format!("{}{}Welcome to Purport\n\n{}Ctrl-S to save\n{}Ctrl-Q to quit", margin, indent, indent, indent).split('\n').map(|line| line.chars().collect()).collect();
+        */
+        let welcome = Vec::new();
+        let lines = self.pane.display(&self.buffers, &welcome)?;
         let mut first = true;
         for line in lines.chain(self.prompt.display(&self.buffers)?) {
             if !first {
@@ -138,6 +130,7 @@ impl<U: UI> Editor<U> {
             for ch in line {
                 match ch {
                     Char::Normal(c) => self.ui.draw(&c.to_string()),
+                    Char::Grapheme(g) => self.ui.draw(g.clone()),
                     Char::Foreground(c) => self.ui.set_foreground(c),
                     Char::Background(c) => self.ui.set_background(c),
                 }
@@ -173,7 +166,7 @@ impl<U: UI> Editor<U> {
             Event::NormalChar('\x01') => {
                 let text = self.prompt("text: ")?;
                 for c in text.chars() {
-                    self.pane.insert_char(&mut self.buffers, c)?;
+                    self.pane.insert_grapheme(&mut self.buffers, &c.to_string())?;
                 }
                 Ok(())
             }
@@ -201,7 +194,7 @@ impl<U: UI> Editor<U> {
             }
             Event::NormalChar('\x13') => self.save(self.pane.buffer_id),
             Event::NormalChar('\x7f') => self.pane.backspace(&mut self.buffers),
-            Event::NormalChar(c) => self.pane.insert_char(&mut self.buffers, *c),
+            Event::NormalChar(c) => self.pane.insert_grapheme(&mut self.buffers, &c.to_string()),
         }?;
         Ok(false)
     }
@@ -225,11 +218,11 @@ impl<U: UI> Editor<U> {
                     res = self.prompt.take(&self.buffers)?;
                     break;
                 }
-                Event::NormalChar(c) => self.prompt.insert_char(&mut self.buffers, c),
+                Event::NormalChar(c) => self.prompt.insert_grapheme(&mut self.buffers, &c.to_string()),
             }?;
             self.refresh()?;
         }
-        self.buffers[0].lines = vec![Vec::new()];
+        self.buffers[0].lines = vec![Line::default()];
         Ok(res)
     }
 
