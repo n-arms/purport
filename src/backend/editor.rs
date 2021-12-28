@@ -1,18 +1,21 @@
+use super::buffer::{Buffer, Line};
 use super::cursor::{Cursor, Offset};
+use super::highlight::{RegexHighlighter, Theme};
 use super::pane::{Char, Pane};
 use super::prompt::Prompt;
-use super::buffer::*;
 use crate::frontend::ui::{self, EscapeSeq, Event, UI};
+use regex::Regex;
 use std::fs;
 use std::io;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Editor<U: UI> {
     pub buffers: Vec<Buffer>,
     pub pane: Pane,
     pub mode: Mode,
     pub prompt: Prompt,
     pub ui: U,
+    pub theme: Theme,
 }
 
 #[derive(Clone, Debug, Copy)]
@@ -35,12 +38,19 @@ impl<U: UI> Editor<U> {
                 file_name: None,
                 dirty: false,
                 is_norm: false,
+                highlighter: None,
+                file_type: None,
             },
             Buffer {
                 lines: vec![Line::default()],
                 file_name: None,
                 dirty: false,
                 is_norm: true,
+                highlighter: Some(Box::new(RegexHighlighter {
+                    number: Regex::new("\\d+").unwrap(),
+                    operator: Regex::new("(\\+)|(\\*)|-|/").unwrap(),
+                })),
+                file_type: None,
             },
         ];
         let prompt = Prompt::new(ui.width(), 0, &mut buffers, "")?;
@@ -57,6 +67,7 @@ impl<U: UI> Editor<U> {
             mode: Mode::Insert,
             prompt,
             ui,
+            theme: Theme::default(),
         })
     }
 
@@ -77,7 +88,6 @@ impl<U: UI> Editor<U> {
                 },
             );
         buffer.file_name = file_name;
-        eprintln!("loaded file into buffer: {:#?}", buffer);
         Some(())
     }
 
@@ -127,10 +137,21 @@ impl<U: UI> Editor<U> {
                 self.ui.newln();
             }
             first = false;
-            for ch in line {
+            let line_highlighting = line.highlighting.clone();
+            for (col, ch) in line.enumerate() {
+                if let Some(c) = col.checked_sub(4) {
+                    if let Some(h) = line_highlighting.as_ref().and_then(|lh| lh.get(c)) {
+                        /*
+                        if h != HighlightType::Text {
+                            panic!("highlighting column {:?} line {:?} with colour {:?}", col, i, h);
+                        }
+                        */
+                        self.ui.set_foreground(self.theme.get(h));
+                    }
+                }
                 match ch {
                     Char::Normal(c) => self.ui.draw(&c.to_string()),
-                    Char::Grapheme(g) => self.ui.draw(g.clone()),
+                    Char::Grapheme(g) => self.ui.draw(g),
                     Char::Foreground(c) => self.ui.set_foreground(c),
                     Char::Background(c) => self.ui.set_background(c),
                 }
@@ -166,7 +187,8 @@ impl<U: UI> Editor<U> {
             Event::NormalChar('\x01') => {
                 let text = self.prompt("text: ")?;
                 for c in text.chars() {
-                    self.pane.insert_grapheme(&mut self.buffers, &c.to_string())?;
+                    self.pane
+                        .insert_grapheme(&mut self.buffers, &c.to_string())?;
                 }
                 Ok(())
             }
@@ -218,7 +240,9 @@ impl<U: UI> Editor<U> {
                     res = self.prompt.take(&self.buffers)?;
                     break;
                 }
-                Event::NormalChar(c) => self.prompt.insert_grapheme(&mut self.buffers, &c.to_string()),
+                Event::NormalChar(c) => self
+                    .prompt
+                    .insert_grapheme(&mut self.buffers, &c.to_string()),
             }?;
             self.refresh()?;
         }

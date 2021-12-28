@@ -1,6 +1,7 @@
+use super::buffer::Buffer;
 use super::cursor::{Cursor, Offset};
 use super::editor::Error;
-use super::buffer::*;
+
 use super::pane::{Iter, Pane};
 use std::convert::TryInto;
 use unicode_segmentation::UnicodeSegmentation;
@@ -65,9 +66,6 @@ impl Prompt {
             .get(self.pane.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.pane.buffer_id))?;
         debug_assert_ne!(buffer.lines.len(), 0, "the buffer is empty");
-        Ok(buffer
-            .lines[0]
-            .skip(self.prompt_text_len)
-            .to_string())
+        Ok(buffer.lines[0].skip(self.prompt_text_len).to_string())
     }
 }

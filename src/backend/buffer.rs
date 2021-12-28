@@ -1,25 +1,56 @@
-use unicode_segmentation::UnicodeSegmentation;
-use std::iter;
+use super::highlight::{Highlighter, TextHighlighting};
 use std::fmt;
+use std::iter;
+use unicode_segmentation::UnicodeSegmentation;
 
-#[derive(Clone, Debug)]
 pub struct Buffer {
     pub lines: Vec<Line>,
     pub file_name: Option<String>,
+    pub file_type: Option<String>,
     pub dirty: bool,
     pub is_norm: bool,
+    pub highlighter: Option<Box<dyn Highlighter>>,
+}
+
+impl fmt::Debug for Buffer {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "Buffer[lines: {:?} file_name: {:?}, file_type: {:?}, dirty: {:?}, is normal: {:?}",
+            self.lines, self.file_name, self.file_type, self.dirty, self.is_norm
+        )
+    }
+}
+
+impl Buffer {
+    pub fn is_norm(&self) -> bool {
+        self.is_norm
+    }
+
+    pub fn highlight(&self) -> Option<TextHighlighting> {
+        let h = self.highlighter.as_ref()?;
+        Some(
+            h.highlight(
+                &self
+                    .lines
+                    .iter()
+                    .map(|line| &line.text[..])
+                    .collect::<Vec<_>>()[..],
+            ),
+        )
+    }
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Line {
-    text: String, 
-    graphemes: usize
+    text: String,
+    graphemes: usize,
 }
 
 impl Line {
     pub fn new(text: String) -> Line {
         let graphemes = text[..].graphemes(true).count();
-        Line{text, graphemes}
+        Line { text, graphemes }
     }
 
     pub fn insert_grapheme(&mut self, idx: usize, grapheme: &str) {
@@ -45,7 +76,10 @@ impl Line {
             self.text.truncate(g_idx);
             let new_len = self.graphemes - idx;
             self.graphemes = idx;
-            Line{text: rest, graphemes: new_len}
+            Line {
+                text: rest,
+                graphemes: new_len,
+            }
         }
     }
     pub fn remove(&mut self, idx: usize) {
@@ -59,18 +93,19 @@ impl Line {
     }
 
     fn to_byte_idx(&self, idx: usize) -> usize {
-        self.text[..].grapheme_indices(true).enumerate()
-            .fold(None, |acc, (i, (g, _))| acc.or(if i == idx {Some(g)} else {None})).unwrap()
+        self.text[..]
+            .grapheme_indices(true)
+            .enumerate()
+            .fold(None, |acc, (i, (g, _))| {
+                acc.or(if i == idx { Some(g) } else { None })
+            })
+            .unwrap()
     }
 
-    pub fn skip<'a>(&'a self, idx: usize) -> &'a str {
+    pub fn skip(&self, idx: usize) -> &str {
         debug_assert!(idx <= self.graphemes);
         let g_idx = self.to_byte_idx(idx);
         &self.text[g_idx..]
-    }
-
-    pub fn get<'a>(&'a self, idx: usize) -> Option<&'a str> {
-        self.text[..].graphemes(true).nth(idx)
     }
 
     pub fn len(&self) -> usize {
@@ -113,11 +148,11 @@ mod test {
         assert_eq!(l.text, String::from("ab"));
 
         let mut l = Line::default();
-        l.insert_grapheme(0, "☆");
+        l.insert_grapheme(0, "\u{2606}");
         l.insert_grapheme(0, "!");
         l.insert_grapheme(2, "!");
         assert_eq!(l.graphemes, 3);
-        assert_eq!(l.text, String::from("!☆!"));
+        assert_eq!(l.text, String::from("!\u{2606}!"));
     }
 
     #[test]
@@ -128,10 +163,10 @@ mod test {
         assert_eq!(l, Line::new(String::from("abcd")));
         assert_eq!(rest, Line::new(String::from("efg")));
 
-        let mut l = Line::new(String::from("☆bcd☆fg"));
+        let mut l = Line::new(String::from("\u{2606}bcd\u{2606}fg"));
         let rest = l.split_at(4);
-        assert_eq!(l, Line::new(String::from("☆bcd")));
-        assert_eq!(rest, Line::new(String::from("☆fg")));
+        assert_eq!(l, Line::new(String::from("\u{2606}bcd")));
+        assert_eq!(rest, Line::new(String::from("\u{2606}fg")));
     }
 
     #[test]
@@ -145,7 +180,7 @@ mod test {
     fn to_byte_index() {
         let l = Line::new(String::from("abc"));
         assert_eq!(l.to_byte_idx(2), 2);
-        let l = Line::new(String::from("☆bc"));
+        let l = Line::new(String::from("\u{2606}bc"));
         assert_eq!(l.to_byte_idx(2), 4);
     }
 }

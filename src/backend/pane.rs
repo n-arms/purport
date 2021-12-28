@@ -1,6 +1,7 @@
+use super::buffer::{Buffer, Line};
 use super::cursor::{Cursor, Offset};
 use super::editor::Error;
-use super::buffer::*;
+use super::highlight::{LineHighlighting, TextHighlighting};
 use crate::frontend::ui::Colour;
 use unicode_segmentation::UnicodeSegmentation;
 
@@ -28,7 +29,8 @@ impl Pane {
             .get(self.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
         self.cursor
-            .move_left_right(buffer, &mut self.offset, self.width.saturating_sub(2), dist)
+            .move_left_right(buffer, &mut self.offset, self.width.saturating_sub(2), dist);
+        Ok(())
     }
 
     pub fn move_cursor_up_down(&mut self, buffers: &[Buffer], dist: isize) -> Result<(), Error> {
@@ -43,7 +45,7 @@ impl Pane {
             self.height - 1,
             self.width.saturating_sub(2),
             dist,
-        )?;
+        );
         Ok(())
     }
     pub fn set_cursor(&mut self, row: usize, col: usize) {
@@ -58,7 +60,10 @@ impl Pane {
                 .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
             buffer.dirty = true;
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
-                debug_assert!(line.len() >= self.cursor.col, "cursor has moved past the end of the line");
+                debug_assert!(
+                    line.len() >= self.cursor.col,
+                    "cursor has moved past the end of the line"
+                );
                 #[allow(clippy::indexing_slicing)]
                 let rest = line.split_at(self.cursor.col);
                 buffer.lines.insert(self.cursor.row.saturating_add(1), rest); // if the file is usize::MAX lines long this will break
@@ -74,7 +79,10 @@ impl Pane {
                 .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
             buffer.dirty = true;
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
-                debug_assert!(line.len() >= self.cursor.col, "cursor has moved past the end of the line");
+                debug_assert!(
+                    line.len() >= self.cursor.col,
+                    "cursor has moved past the end of the line"
+                );
                 #[allow(clippy::indexing_slicing)]
                 line.insert_grapheme(self.cursor.col, g);
                 self.move_cursor_left_right(buffers, 1)?;
@@ -116,7 +124,11 @@ impl Pane {
         }
     }
 
-    pub fn display<'a>(&self, buffers: &'a [Buffer], default: &'a [Line]) -> Result<Iter<'a>, Error> {
+    pub fn display<'a>(
+        &self,
+        buffers: &'a [Buffer],
+        default: &'a [Line],
+    ) -> Result<Iter<'a>, Error> {
         let buffer = buffers
             .get(self.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
@@ -136,7 +148,8 @@ impl Pane {
             None
         };
 
-        Ok(Iter {
+        let highlighting = buffer.highlight().unwrap_or_default();
+        let iter = Iter {
             text: if buffer.lines == vec![Line::default()] {
                 Some(default)
             } else if buffer.lines.len() < self.offset.row {
@@ -149,11 +162,14 @@ impl Pane {
             row: 0,
             status_bar,
             width: self.width,
-            draw_tildes: buffer.is_norm,
-        })
+            draw_tildes: buffer.is_norm(),
+            highlighting,
+        };
+        Ok(iter)
     }
 }
 
+#[derive(Debug)]
 pub struct Iter<'a> {
     text: Option<&'a [Line]>,
     col_offset: usize,
@@ -162,20 +178,24 @@ pub struct Iter<'a> {
     status_bar: Option<String>,
     row: usize,
     draw_tildes: bool,
+    highlighting: TextHighlighting,
 }
 
+#[derive(Debug)]
 pub enum Row<'a> {
     Normal(&'a str),
-    Empty{part_of_file: bool},
+    Empty { part_of_file: bool },
     StatusBar(String),
 }
 
+#[derive(Debug)]
 pub struct RowIter<'a> {
     row: Row<'a>,
     col: usize,
     line: usize,
     width: usize,
     draw_tildes: bool,
+    pub highlighting: Option<LineHighlighting>,
 }
 
 impl<'a> Iterator for Iter<'a> {
@@ -189,23 +209,30 @@ impl<'a> Iterator for Iter<'a> {
                     col: 0,
                     width: self.width,
                     draw_tildes: self.draw_tildes,
-                    line: self.row
+                    line: self.row,
+                    highlighting: None,
                 })
             } else {
                 self.row += 1;
                 let row = self.text.and_then(|text| text.get(self.row - 1));
                 Some(RowIter {
-                    row: if row.map(|l| l.len()).map(|row| self.col_offset >= row).unwrap_or(false) {
-                        Row::Empty{part_of_file: true}
+                    row: if row
+                        .map(Line::len)
+                        .map_or(false, |row| self.col_offset >= row)
+                    {
+                        Row::Empty { part_of_file: true }
                     } else if row.is_none() {
-                        Row::Empty{part_of_file: false}
+                        Row::Empty {
+                            part_of_file: false,
+                        }
                     } else {
-                        Row::Normal(&row.unwrap().skip(self.col_offset))
+                        Row::Normal(row.unwrap().skip(self.col_offset))
                     },
                     col: 0,
                     width: self.width,
                     draw_tildes: self.draw_tildes,
-                    line: self.row
+                    line: self.row,
+                    highlighting: self.highlighting.get_line(self.row - 1),
                 })
             }
         } else {
@@ -218,33 +245,40 @@ impl<'a> Iterator for RowIter<'a> {
     type Item = Char<'a>;
     fn next(&mut self) -> Option<Self::Item> {
         match &mut self.row {
-            Row::Normal(_) | Row::Empty{part_of_file: true} => {
+            Row::Normal(_) | Row::Empty { part_of_file: true } => {
                 if self.col < self.width {
                     self.col += 1;
                     if self.draw_tildes {
                         if self.col == 1 {
                             if self.line > 99 {
+                                #[allow(clippy::cast_possible_truncation)]
                                 Some(Char::Normal((((self.line / 100) % 10) as u8 + 48) as char))
                             } else {
                                 Some(Char::Normal(' '))
                             }
                         } else if self.col == 2 {
                             if self.line > 9 {
+                                #[allow(clippy::cast_possible_truncation)]
                                 Some(Char::Normal((((self.line / 10) % 10) as u8 + 48) as char))
                             } else {
                                 Some(Char::Normal(' '))
                             }
                         } else if self.col == 3 {
+                            #[allow(clippy::cast_possible_truncation)]
                             Some(Char::Normal(((self.line % 10) as u8 + 48) as char))
                         } else if self.col == 4 {
                             Some(Char::Normal(' '))
                         } else if let Row::Normal(r) = &mut self.row {
-                            Some(Char::Grapheme(r.graphemes(true).nth(self.col - 5).unwrap_or(" ")))
+                            Some(Char::Grapheme(
+                                r.graphemes(true).nth(self.col - 5).unwrap_or(" "),
+                            ))
                         } else {
                             Some(Char::Normal(' '))
                         }
                     } else if let Row::Normal(r) = self.row {
-                        Some(Char::Grapheme(r.graphemes(true).nth(self.col - 1).unwrap_or(" ")))
+                        Some(Char::Grapheme(
+                            r.graphemes(true).nth(self.col - 1).unwrap_or(" "),
+                        ))
                     } else {
                         Some(Char::Normal(' '))
                     }
@@ -252,7 +286,7 @@ impl<'a> Iterator for RowIter<'a> {
                     None
                 }
             }
-            Row::Empty{part_of_file} => {
+            Row::Empty { part_of_file } => {
                 if self.col >= self.width {
                     None
                 } else if *part_of_file && self.col == 0 {

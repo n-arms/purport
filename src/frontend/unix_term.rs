@@ -70,19 +70,29 @@ impl UI for Term {
     fn set_foreground(&mut self, colour: Colour) {
         #[allow(clippy::indexing_slicing)]
         self.buffer[self.row].push_str(match colour {
-            Colour::Black => "\x1b[30m",
-            Colour::White => "\x1b[37m",
-            Colour::Red => "\x1b[31m",
             Colour::Reset => "\x1b[0m",
+            Colour::Black => "\x1b[30m",
+            Colour::Red => "\x1b[31m",
+            Colour::Green => "\x1b[32m",
+            Colour::Yellow => "\x1b[33m",
+            Colour::Blue => "\x1b[34m",
+            Colour::Magenta => "\x1b[35m",
+            Colour::Cyan => "\x1b[36m",
+            Colour::White => "\x1b[37m",
         });
     }
     fn set_background(&mut self, colour: Colour) {
         #[allow(clippy::indexing_slicing)]
         self.buffer[self.row].push_str(match colour {
-            Colour::Black => "\x1b[40m",
-            Colour::White => "\x1b[47m",
-            Colour::Red => "\x1b[41m",
             Colour::Reset => "\x1b[0m",
+            Colour::Black => "\x1b[40m",
+            Colour::Red => "\x1b[41m",
+            Colour::Green => "\x1b[42m",
+            Colour::Yellow => "\x1b[43m",
+            Colour::Blue => "\x1b[44m",
+            Colour::Magenta => "\x1b[45m",
+            Colour::Cyan => "\x1b[46m",
+            Colour::White => "\x1b[47m",
         });
     }
     fn refresh(&mut self) -> Result<(), Error> {

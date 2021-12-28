@@ -1,5 +1,5 @@
-use super::editor::Error;
-use super::buffer::*;
+use super::buffer::{Buffer, Line};
+
 use std::convert::TryInto;
 
 #[derive(Copy, Clone, Debug, Default)]
@@ -41,16 +41,22 @@ impl Cursor {
         offset: &mut Offset,
         width: usize,
         dist: isize,
-    ) -> Result<(), Error> {
+    ) {
         if let Some(line) = buffer.lines.get(self.row) {
             if dist > 0 {
                 // the distance from the screen pos of the cursor to the right edge of the screen
                 // = screen width - position of cursor on screen
-                debug_assert!(self.col >= offset.col, "the offset is less than the cursor: the cursor is to the left of the screen");
+                debug_assert!(
+                    self.col >= offset.col,
+                    "the offset is less than the cursor: the cursor is to the left of the screen"
+                );
                 debug_assert!(width >= self.col - offset.col, "the cursor's screen position is greater than the width: the cursor is to the right of the screen");
                 let old_edge_dist = width - (self.col - offset.col);
                 // the distance the cursor needs to be moved to the right
-                debug_assert!(line.len() >= self.col, "the cursor is past the end of the line");
+                debug_assert!(
+                    line.len() >= self.col,
+                    "the cursor is past the end of the line"
+                );
                 #[allow(clippy::cast_sign_loss)]
                 let dist_right = (dist as usize).min(line.len() - self.col);
                 // if the distance to be moved is more than the available space to move
@@ -70,7 +76,10 @@ impl Cursor {
             } else {
                 // the distance from the screen pos of the cursor to the left edge of the screen
                 // = cursor column - offset column
-                debug_assert!(self.col >= offset.col, "the offset is less than the cursor: the cursor is to the left of the screen");
+                debug_assert!(
+                    self.col >= offset.col,
+                    "the offset is less than the cursor: the cursor is to the left of the screen"
+                );
                 let old_edge_dist = self.col - offset.col;
                 // the distance the cursor needs to be moved to the left
                 #[allow(clippy::cast_sign_loss)]
@@ -86,7 +95,6 @@ impl Cursor {
                 self.col -= dist_left; // dist_left is at most col, col - col = 0
             }
         }
-        Ok(())
     }
 
     pub fn move_up_down(
@@ -96,12 +104,18 @@ impl Cursor {
         height: usize,
         _width: usize,
         dist: isize,
-    ) -> Result<(), Error> {
+    ) {
         if dist > 0 {
-            debug_assert!(self.row >= offset.row, "offset is greater than cursor: the cursor is above the screen");
+            debug_assert!(
+                self.row >= offset.row,
+                "offset is greater than cursor: the cursor is above the screen"
+            );
             debug_assert!(height >= self.row - offset.row, "the screen position of the cursor is greater than the height: the cursor is below the screen");
             let old_edge_dist = height - (self.row - offset.row);
-            debug_assert!(buffer.lines.len() > self.row, "the cursor is past the end of the file");
+            debug_assert!(
+                buffer.lines.len() > self.row,
+                "the cursor is past the end of the file"
+            );
             #[allow(clippy::cast_sign_loss)]
             let dist_down = (dist as usize).min(buffer.lines.len() - self.row - 1);
             if old_edge_dist <= dist_down {
@@ -115,7 +129,10 @@ impl Cursor {
             }
             self.row = self.row.checked_add(dist_down).expect("overflow on scroll");
         } else {
-            debug_assert!(self.row >= offset.row, "offset is greater than cursor: the cursor is above the screen");
+            debug_assert!(
+                self.row >= offset.row,
+                "offset is greater than cursor: the cursor is above the screen"
+            );
             let old_edge_dist = self.row - offset.row;
 
             #[allow(clippy::cast_sign_loss)]
@@ -138,6 +155,5 @@ impl Cursor {
                 );
             }
         }
-        Ok(())
     }
 }
