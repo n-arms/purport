@@ -67,27 +67,21 @@ impl Pane {
 
     pub fn insert_grapheme(&mut self, buffers: &mut [Buffer], g: &str) -> Result<(), Error> {
         debug_assert!(self.cursor.row - self.offset.row < self.height);
-        eprintln!("inserting grapheme {:?}", g.as_bytes());
         if g == "\r" {
-            eprintln!("inserting newline");
             let buffer = buffers
                 .get_mut(self.buffer_id)
                 .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
             buffer.dirty = true;
-            if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
-                eprintln!("buffer line already existed {:?}", line);
+            if buffer.lines() > self.cursor.row {
                 debug_assert!(
-                    line.len() >= self.cursor.col,
+                    buffer.get(self.cursor.row).unwrap().len() >= self.cursor.col,
                     "cursor has moved past the end of the line"
                 );
-                #[allow(clippy::indexing_slicing)]
-                let rest = line.split_at(self.cursor.col);
-                buffer.lines.insert(self.cursor.row.saturating_add(1), rest); // if the file is usize::MAX lines long this will break
+                buffer.split_line(self.cursor.row, self.cursor.col);
                 self.move_cursor_up_down(buffers, 1)?;
                 self.offset.col = 0;
                 self.cursor.col = 0;
             } else {
-                eprintln!("appending new line");
                 buffer.append_string(String::new());
                 self.move_cursor_up_down(buffers, 1)?;
             }
@@ -97,13 +91,12 @@ impl Pane {
                 .get_mut(self.buffer_id)
                 .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
             buffer.dirty = true;
-            if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
+            if let Some(line) = buffer.get(self.cursor.row) {
                 debug_assert!(
                     line.len() >= self.cursor.col,
                     "cursor has moved past the end of the line"
                 );
-                #[allow(clippy::indexing_slicing)]
-                line.insert_grapheme(self.cursor.col, g);
+                buffer.insert_char(self.cursor.row, self.cursor.col, g);
                 self.move_cursor_left_right(buffers, 1)?;
             } else {
                 buffer.append_string(String::from(g));
@@ -118,24 +111,20 @@ impl Pane {
             .get_mut(self.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
         buffer.dirty = true;
-        if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
+        if buffer.lines() > self.cursor.row {
             if self.cursor.col == 0 && self.cursor.row == 0 {
                 Ok(())
             } else if self.cursor.col == 0 {
-                let old = line.clone();
-                #[allow(clippy::integer_arithmetic)]
-                if let Some(prev) = buffer.lines.get_mut(self.cursor.row - 1) {
-                    // row != 0 due to the above if
-                    self.set_cursor(self.cursor.row - 1, prev.len());
-                    prev.merge(&old);
-                    buffer.lines.remove(self.cursor.row + 1); // row was decremented by set cursor, so it is less than usize::MAX
+                if self.cursor.row < buffer.lines() {
+                    let new_col = buffer.get(self.cursor.row - 1).map_or(0, Line::len);
+                    buffer.merge_with_above(self.cursor.row);
+                    self.set_cursor(self.cursor.row - 1, new_col);
                     Ok(())
                 } else {
                     Ok(())
                 }
             } else {
-                #[allow(clippy::integer_arithmetic)]
-                line.remove(self.cursor.col - 1); // col != 0 due to the above if
+                buffer.delete_char(self.cursor.row, self.cursor.col);
                 self.move_cursor_left_right(buffers, -1)
             }
         } else {
@@ -161,7 +150,7 @@ impl Pane {
             status_bar.push_str(if buffer.dirty { " | + | " } else { " " });
             status_bar.push_str(&(self.cursor.row + 1).to_string());
             status_bar.push(':');
-            status_bar.push_str(&buffer.lines.len().to_string());
+            status_bar.push_str(&buffer.lines().to_string());
             Some(status_bar)
         } else {
             None
@@ -169,12 +158,12 @@ impl Pane {
 
         let highlighting = buffer.highlight().unwrap_or_default();
         let iter = Iter {
-            text: if buffer.lines == vec![Line::default()] {
+            text: if buffer.is_empty() {
                 Some(default)
-            } else if buffer.lines.len() < self.offset.row {
+            } else if buffer.lines() < self.offset.row {
                 None
             } else {
-                Some(&buffer.lines[self.offset.row..])
+                Some(&buffer.as_slice()[self.offset.row..])
             },
             col_offset: self.offset.col,
             height: self.height,

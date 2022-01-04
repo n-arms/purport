@@ -65,7 +65,11 @@ impl Prompt {
         let buffer = buffers
             .get(self.pane.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.pane.buffer_id))?;
-        debug_assert_ne!(buffer.lines.len(), 0, "the buffer is empty");
-        Ok(buffer.lines[0].skip(self.prompt_text_len).to_string())
+        debug_assert_ne!(buffer.lines(), 0, "the buffer is empty");
+        Ok(buffer
+            .get(0)
+            .unwrap()
+            .skip(self.prompt_text_len)
+            .to_string())
     }
 }

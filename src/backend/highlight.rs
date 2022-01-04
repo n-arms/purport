@@ -1,7 +1,9 @@
 use super::buffer::Buffer;
 use crate::frontend::ui::{Colour, IsNotColour};
-use regex::{Match, Regex};
+use regex::{Regex};
+
 use std::collections::HashMap;
+use std::hash::{Hash, Hasher};
 use std::str;
 use toml::{de, Value};
 
@@ -16,7 +18,8 @@ pub struct RegexHighlighter {
 }
 
 impl Highlighter for RegexHighlighter {
-    fn highlight(&mut self, text: &Buffer) -> TextHighlighting {
+    fn highlight(&mut self, _text: &Buffer) -> TextHighlighting {
+        /*
         let numbers = text.lines.iter().enumerate().flat_map(|(i, line)| {
             self.number
                 .find_iter(line.skip(0))
@@ -76,6 +79,8 @@ impl Highlighter for RegexHighlighter {
             }
         }
         TextHighlighting(h)
+        */
+        todo!()
     }
 }
 
@@ -87,11 +92,19 @@ impl TextHighlighting {
         self.0.get(&row).map_or(0, HashMap::len)
     }
 
+    // the problem is at or before here
     pub fn get_line(&self, row: usize) -> Option<LineHighlighting> {
         let mut start: Option<HighlightType> = None;
         for i in (0..row).rev() {
             if self.row_len(i) != 0 {
-                start = self.0.get(&i).and_then(|row| row.values().last()).copied();
+                //start = self.0.get(&i).and_then(|row| row.values().last()).copied();
+                if let Some(row) = self.0.get(&i) {
+                    let mut largest = 0;
+                    for k in row.keys() {
+                        largest = *k.max(&largest);
+                    }
+                    start = row.get(&largest).copied();
+                }
                 break;
             }
         }
@@ -101,15 +114,17 @@ impl TextHighlighting {
         ))
     }
 
-    pub fn from_ranges(
-        len: usize,
-        range: Vec<Range>,
-    ) -> Self {
+    pub fn from_ranges(len: usize, range: Vec<Range>) -> Self {
         let mut h = HashMap::new();
         for i in 0..len {
             h.insert(i, HashMap::new());
         }
-        for Range{start: (start_row, start_col), stop: (end_row, end_col), highlight} in range {
+        for Range {
+            start: (start_row, start_col),
+            stop: (end_row, end_col),
+            highlight,
+        } in range
+        {
             h.get_mut(&start_row).unwrap().insert(start_col, highlight);
             if !h[&end_row].contains_key(&end_col) {
                 h.get_mut(&end_row)
@@ -139,11 +154,11 @@ impl Default for LineHighlighting {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Range {
     pub start: (usize, usize),
     pub stop: (usize, usize),
-    pub highlight: HighlightType
+    pub highlight: HighlightType,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]

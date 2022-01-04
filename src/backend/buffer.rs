@@ -6,13 +6,12 @@ use std::str::Bytes;
 use unicode_segmentation::UnicodeSegmentation;
 
 pub struct Buffer {
-    pub lines: Vec<Line>,
+    lines: Vec<Line>,
     pub file_name: Option<String>,
     pub file_type: Option<String>,
     pub dirty: bool,
     pub is_norm: bool,
     pub highlighter: Option<RefCell<Box<dyn Highlighter>>>,
-    pub cached_bytes: Option<Vec<u8>>,
 }
 
 impl fmt::Debug for Buffer {
@@ -26,6 +25,77 @@ impl fmt::Debug for Buffer {
 }
 
 impl Buffer {
+    pub fn new(
+        lines: Vec<Line>,
+        is_norm: bool,
+        file_name: Option<String>,
+        highlighter: Option<RefCell<Box<dyn Highlighter>>>,
+    ) -> Self {
+        Buffer {
+            lines,
+            is_norm,
+            file_name,
+            file_type: None, // TODO
+            dirty: false,
+            highlighter,
+        }
+    }
+    pub fn clear(&mut self) {
+        self.lines = vec![Line::default()];
+    }
+    pub fn insert_char(&mut self, row: usize, col: usize, g: &str) {
+        debug_assert!(self.lines() > row);
+        let line = &mut self.lines[row];
+        line.insert_grapheme(col, g);
+        for line in &mut self.lines[row + 1..] {
+            line.offset += 1;
+        }
+    }
+    pub fn delete_char(&mut self, row: usize, col: usize) {
+        debug_assert!(col != 0);
+        if let Some(line) = self.lines.get_mut(row) {
+            line.remove(col - 1);
+        }
+        for line in &mut self.lines[row + 1..] {
+            line.offset -= 1;
+        }
+    }
+    pub fn get(&self, index: usize) -> Option<&Line> {
+        self.lines.get(index)
+    }
+    pub fn merge_with_above(&mut self, index: usize) {
+        debug_assert!(index < self.lines());
+        if index == 0 {
+            return;
+        }
+        let line = &self.lines[index].clone();
+        let prev = self.lines.get_mut(index - 1).unwrap();
+        prev.merge(&line);
+        self.lines.remove(index);
+        for line in &mut self.lines[index..] {
+            line.offset -= 1;
+        }
+    }
+    pub fn as_slice(&self) -> &[Line] {
+        &self.lines[..]
+    }
+    pub fn is_empty(&self) -> bool {
+        self.lines() == 0 && self.lines[0] == Line::default()
+    }
+    pub fn lines(&self) -> usize {
+        self.lines.len()
+    }
+    pub fn to_chunk(&self) -> Vec<u8> {
+        let mut buffer = Vec::new();
+        for line in &self.lines {
+            buffer.reserve(line.len());
+            for byte in line.bytes() {
+                buffer.push(byte);
+            }
+            buffer.push(b'\n');
+        }
+        buffer
+    }
     pub fn is_norm(&self) -> bool {
         self.is_norm
     }
@@ -33,23 +103,6 @@ impl Buffer {
     pub fn highlight(&self) -> Option<TextHighlighting> {
         let mut h = self.highlighter.as_ref()?.borrow_mut();
         Some(h.highlight(self))
-    }
-
-    #[deprecated(
-        since = "0.0.0",
-        note = "use parse with callback instead of bytes to save an allocation"
-    )]
-    pub fn bytes(&self) -> Vec<u8> {
-        eprintln!("appending string to buffer");
-        let mut bytes = Vec::new();
-        for line in &self.lines {
-            let line_bytes = line.bytes();
-            bytes.reserve(line_bytes.len());
-            for byte in line_bytes {
-                bytes.push(byte);
-            }
-        }
-        bytes
     }
 
     // take a byte offset from the start of the buffer and produce a (row, col) position
@@ -69,12 +122,21 @@ impl Buffer {
     }
 
     pub fn append_string(&mut self, s: String) {
-        eprintln!("appending string to buffer");
         if let Some(last) = self.lines.last() {
-            let new_offset = last.offset + last.text.len();
+            let new_offset = last.offset + last.text.len() + 1; // the +1 is to account for the newline
             self.lines.push(Line::new(s, new_offset));
         } else {
             self.lines.push(Line::new(s, 0));
+        }
+    }
+
+    pub fn split_line(&mut self, index: usize, split_col: usize) {
+        debug_assert!(index < self.lines());
+        let line = &mut self.lines[index];
+        let rest = line.split_at(split_col);
+        self.lines.insert(index + 1, rest);
+        for line in &mut self.lines[index + 1..] {
+            line.offset += 1;
         }
     }
 
@@ -86,7 +148,6 @@ impl Buffer {
             offset + lines.last().unwrap().text.len()
         });
         Buffer {
-            cached_bytes: None,
             dirty: false,
             file_name,
             file_type: None,
@@ -101,6 +162,9 @@ impl Buffer {
 pub struct Line {
     text: String,
     graphemes: usize,
+    // offset is the starting position of the line from the start of the file.
+    // This includes newlines (which aren't included in Line::text), so calculating this is prone
+    // to off by 1 errors
     offset: usize,
 }
 

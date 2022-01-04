@@ -1,5 +1,7 @@
 use super::buffer::Buffer;
-use super::highlight::{Highlighter, TextHighlighting, Range};
+use super::highlight::{Highlighter, Range, TextHighlighting};
+
+use std::hash::Hasher;
 
 use tree_sitter::{Language, LanguageError, Parser, Query, QueryCursor, Tree};
 
@@ -52,19 +54,13 @@ impl TreeSitterHighlighter {
         let tree = self.tree.as_ref().unwrap();
         let mut cursor = QueryCursor::new(); // we need a way to map from the number of bytes to the line # and col #
         let mut ranges = Vec::new();
-        for m in cursor.matches(
-            &self.highlight_query,
-            tree.root_node(),
-            buf.bytes().as_slice(),
-        ) {
+        for m in cursor.matches(&self.highlight_query, tree.root_node(), &buf.to_chunk()[..]) {
             for capture in m.captures {
                 if let Ok(highlight) = self.capture_table[capture.index as usize].parse() {
                     ranges.push(Range {
-                        start:
-                        buf.to_pos(capture.node.start_byte()),
-                        stop:
-                        buf.to_pos(capture.node.end_byte()),
-                        highlight
+                        start: buf.to_pos(capture.node.start_byte()),
+                        stop: buf.to_pos(capture.node.end_byte()),
+                        highlight,
                     });
                 } else {
                     eprintln!(
@@ -74,19 +70,13 @@ impl TreeSitterHighlighter {
                 }
             }
         }
-        TextHighlighting::from_ranges(buf.lines.len(), ranges)
+        TextHighlighting::from_ranges(buf.lines(), ranges)
     }
 }
 
 impl Highlighter for TreeSitterHighlighter {
     fn highlight(&mut self, buf: &Buffer) -> TextHighlighting {
-        let mut buffer = Vec::new();
-        for line in &buf.lines {
-            buffer.reserve(line.len());
-            for byte in line.bytes() {
-                buffer.push(byte);
-            }
-        }
+        let buffer = buf.to_chunk();
         self.tree = self.parser.parse(&buffer[..], None);
         self.highlight_from_tree(buf)
     }

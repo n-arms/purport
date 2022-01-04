@@ -11,7 +11,6 @@ pub struct Offset {
 impl Offset {
     #[allow(clippy::cast_sign_loss)]
     fn scroll_left_right(&mut self, dist: isize) {
-        eprintln!("scrolling offset by {:?}", dist);
         if dist >= 0 {
             self.col = self.col.saturating_add(dist as usize);
         } else {
@@ -43,7 +42,7 @@ impl Cursor {
         width: usize,
         dist: isize,
     ) {
-        if let Some(line) = buffer.lines.get(self.row) {
+        if let Some(line) = buffer.get(self.row) {
             if dist > 0 {
                 // the distance from the screen pos of the cursor to the right edge of the screen
                 // = screen width - position of cursor on screen
@@ -129,11 +128,11 @@ impl Cursor {
             debug_assert!(height >= self.row - offset.row, "the screen position of the cursor is greater than the height: the cursor is below the screen");
             let old_edge_dist = height - (self.row - offset.row);
             debug_assert!(
-                buffer.lines.len() > self.row,
+                buffer.lines() > self.row,
                 "the cursor is past the end of the file"
             );
             #[allow(clippy::cast_sign_loss)]
-            let dist_down = (dist as usize).min(buffer.lines.len() - self.row - 1);
+            let dist_down = (dist as usize).min(buffer.lines() - self.row - 1);
             if old_edge_dist <= dist_down {
                 #[allow(clippy::expect_used)]
                 offset.scroll_up_down(
@@ -162,7 +161,7 @@ impl Cursor {
             }
             self.row -= dist_up; // dist up is at most self.row, self.row - self.row = 0
         }
-        let new_line_len = buffer.lines.get(self.row).map_or(0, Line::len);
+        let new_line_len = buffer.get(self.row).map_or(0, Line::len);
         if new_line_len < self.col {
             self.col = new_line_len;
             if self.col < offset.col {

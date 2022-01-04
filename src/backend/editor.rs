@@ -1,6 +1,6 @@
 use super::buffer::{Buffer, Line};
 use super::cursor::{Cursor, Offset};
-use super::highlight::{Theme};
+use super::highlight::Theme;
 use super::pane::{Char, Pane};
 use super::prompt::Prompt;
 use super::tree_highlighter::TreeSitterHighlighter;
@@ -9,6 +9,7 @@ use crate::frontend::ui::{self, EscapeSeq, Event, UI};
 use std::cell::RefCell;
 use std::fs;
 use std::io;
+use std::time::{Instant};
 use tree_sitter::Query;
 use tree_sitter_javascript::{language, HIGHLIGHT_QUERY};
 
@@ -37,30 +38,19 @@ pub enum Error {
 impl<U: UI> Editor<U> {
     pub fn open(ui: U) -> Result<Self, Error> {
         let mut buffers = vec![
-            Buffer {
-                lines: vec![Line::default()],
-                file_name: None,
-                dirty: false,
-                is_norm: false,
-                highlighter: None,
-                file_type: None,
-                cached_bytes: None,
-            },
-            Buffer {
-                lines: vec![Line::default()],
-                file_name: None,
-                dirty: false,
-                is_norm: true,
-                highlighter: Some(RefCell::new(Box::new(
+            Buffer::new(vec![Line::default()], false, None, None),
+            Buffer::new(
+                vec![Line::default()],
+                true,
+                None,
+                Some(RefCell::new(Box::new(
                     TreeSitterHighlighter::new(
                         language(),
                         Query::new(language(), HIGHLIGHT_QUERY).unwrap(),
                     )
                     .unwrap(),
                 ))),
-                file_type: None,
-                cached_bytes: None,
-            },
+            ),
         ];
         let prompt = Prompt::new(ui.width(), 0, &mut buffers, "")?;
 
@@ -85,7 +75,7 @@ impl<U: UI> Editor<U> {
         if let Some(bytes) = file_name.clone().and_then(|fp| fs::read(&fp).ok()) {
             *buffer = Buffer::from_bytes(&bytes, file_name);
         } else {
-            buffer.lines = vec![Line::default()];
+            buffer.clear();
             buffer.file_name = None;
             buffer.dirty = false;
             buffer.is_norm = true;
@@ -99,19 +89,7 @@ impl<U: UI> Editor<U> {
             .get_mut(buffer_id)
             .ok_or(Error::BufferClosedPrematurely(buffer_id))?;
         if let Some(fp) = &buffer.file_name {
-            fs::write(
-                fp,
-                buffer
-                    .lines
-                    .iter()
-                    .map(Line::to_string)
-                    .fold(String::new(), |mut acc, x| {
-                        acc.push_str(&x);
-                        acc.push('\n');
-                        acc
-                    }),
-            )
-            .map_err(Error::IOErr)?;
+            fs::write(fp, buffer.to_chunk()).map_err(Error::IOErr)?;
             buffer.dirty = false;
         } else {
             let new_name = Some(self.prompt("Enter the file name: ")?);
@@ -127,6 +105,8 @@ impl<U: UI> Editor<U> {
 
     // we are currently highlighting relative to the bottom of the screen instead of line 0: TODO
     pub fn draw(&mut self) -> Result<(), Error> {
+        #[cfg(debug_assertions)]
+        let now = Instant::now();
         /*
         let margin = "\n".repeat(if self.pane.height <= self.pane.height / 3 + 5 {0} else {self.pane.height / 3});
         let indent = " ".repeat(if self.pane.width <= self.pane.width / 2 - 15 {0} else {self.pane.width / 2 - 15});
@@ -165,6 +145,10 @@ impl<U: UI> Editor<U> {
             self.pane.cursor.row + 1 - self.pane.offset.row,
             self.pane.cursor.col + 5 - self.pane.offset.col,
         );
+        #[cfg(debug_assertions)]
+        {
+            eprintln!("it took {:?} ms to refresh the editor", now.elapsed());
+        }
         Ok(())
     }
     // processing an event could result in processing a prompt
@@ -250,7 +234,7 @@ impl<U: UI> Editor<U> {
             }?;
             self.refresh()?;
         }
-        self.buffers[0].lines = vec![Line::default()];
+        self.buffers[0].clear();
         Ok(res)
     }
 

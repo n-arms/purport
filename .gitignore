@@ -17,3 +17,4 @@ Cargo.lock
 # for testing purposes
 /tree-sitter-javascript
 test.js
+log.txt
