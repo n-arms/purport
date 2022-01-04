@@ -11,6 +11,7 @@ pub struct Offset {
 impl Offset {
     #[allow(clippy::cast_sign_loss)]
     fn scroll_left_right(&mut self, dist: isize) {
+        eprintln!("scrolling offset by {:?}", dist);
         if dist >= 0 {
             self.col = self.col.saturating_add(dist as usize);
         } else {
@@ -50,7 +51,10 @@ impl Cursor {
                     self.col >= offset.col,
                     "the offset is less than the cursor: the cursor is to the left of the screen"
                 );
-                debug_assert!(width >= self.col - offset.col, "the cursor's screen position is greater than the width: the cursor is to the right of the screen");
+                debug_assert!(
+                    width >= self.col - offset.col,
+                    "the cursor's screen position is greater than the width: the cursor is to the right of the screen"
+                );
                 let old_edge_dist = width - (self.col - offset.col);
                 // the distance the cursor needs to be moved to the right
                 debug_assert!(
@@ -59,7 +63,19 @@ impl Cursor {
                 );
                 #[allow(clippy::cast_sign_loss)]
                 let dist_right = (dist as usize).min(line.len() - self.col);
+                // if the line is 3 long and the column is 2, the maximum dist right is 1
                 // if the distance to be moved is more than the available space to move
+                //
+                // width = 2, cursor.col = 1, offset.col = 1, dist = 2, line len = 3
+                //
+                // old edge dist = 2 - (1 - 1) = 2 // therefore old edge dist is the distance you
+                // would need to move to be off the screen
+                //
+                // dist right = 2.min(3 - 1) = 2 // this is correct
+                // when moving we need to scroll 1 to the right: and the condition for scrolling is
+                // met, old edge dist is <= dist right
+                //
+                // we scroll right by the difference of the two + 1
                 if old_edge_dist <= dist_right {
                     #[allow(clippy::expect_used)]
                     offset.scroll_left_right(

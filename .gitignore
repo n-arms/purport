@@ -13,3 +13,7 @@ Cargo.lock
 # Added by cargo
 
 /target
+
+# for testing purposes
+/tree-sitter-javascript
+test.js

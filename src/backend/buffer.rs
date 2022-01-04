@@ -1,6 +1,8 @@
 use super::highlight::{Highlighter, TextHighlighting};
+use std::cell::RefCell;
 use std::fmt;
 use std::iter;
+use std::str::Bytes;
 use unicode_segmentation::UnicodeSegmentation;
 
 pub struct Buffer {
@@ -9,7 +11,8 @@ pub struct Buffer {
     pub file_type: Option<String>,
     pub dirty: bool,
     pub is_norm: bool,
-    pub highlighter: Option<Box<dyn Highlighter>>,
+    pub highlighter: Option<RefCell<Box<dyn Highlighter>>>,
+    pub cached_bytes: Option<Vec<u8>>,
 }
 
 impl fmt::Debug for Buffer {
@@ -28,16 +31,69 @@ impl Buffer {
     }
 
     pub fn highlight(&self) -> Option<TextHighlighting> {
-        let h = self.highlighter.as_ref()?;
-        Some(
-            h.highlight(
-                &self
-                    .lines
-                    .iter()
-                    .map(|line| &line.text[..])
-                    .collect::<Vec<_>>()[..],
-            ),
-        )
+        let mut h = self.highlighter.as_ref()?.borrow_mut();
+        Some(h.highlight(self))
+    }
+
+    #[deprecated(
+        since = "0.0.0",
+        note = "use parse with callback instead of bytes to save an allocation"
+    )]
+    pub fn bytes(&self) -> Vec<u8> {
+        eprintln!("appending string to buffer");
+        let mut bytes = Vec::new();
+        for line in &self.lines {
+            let line_bytes = line.bytes();
+            bytes.reserve(line_bytes.len());
+            for byte in line_bytes {
+                bytes.push(byte);
+            }
+        }
+        bytes
+    }
+
+    // take a byte offset from the start of the buffer and produce a (row, col) position
+    // this is relatively unoptimized: it is currently O(n) but could be O(log n) using binary
+    // search (the lines are guaranteed to be sorted by offset)
+    pub fn to_pos(&self, offset: usize) -> (usize, usize) {
+        for (i, line) in self.lines.iter().enumerate().rev() {
+            if line.offset <= offset {
+                return (i, offset - line.offset);
+            }
+        }
+        if let Some(last) = self.lines.last() {
+            (self.lines.len() - 1, last.offset + last.bytes().len())
+        } else {
+            (0, 0)
+        }
+    }
+
+    pub fn append_string(&mut self, s: String) {
+        eprintln!("appending string to buffer");
+        if let Some(last) = self.lines.last() {
+            let new_offset = last.offset + last.text.len();
+            self.lines.push(Line::new(s, new_offset));
+        } else {
+            self.lines.push(Line::new(s, 0));
+        }
+    }
+
+    pub fn from_bytes(bytes: &[u8], file_name: Option<String>) -> Self {
+        let mut lines = Vec::new();
+        bytes.split(|b| *b == b'\n').fold(0, |offset, line_bytes| {
+            let line = String::from_utf8_lossy(line_bytes).to_string();
+            lines.push(Line::new(line, offset));
+            offset + lines.last().unwrap().text.len()
+        });
+        Buffer {
+            cached_bytes: None,
+            dirty: false,
+            file_name,
+            file_type: None,
+            highlighter: None,
+            is_norm: true,
+            lines,
+        }
     }
 }
 
@@ -45,12 +101,17 @@ impl Buffer {
 pub struct Line {
     text: String,
     graphemes: usize,
+    offset: usize,
 }
 
 impl Line {
-    pub fn new(text: String) -> Line {
+    pub fn new(text: String, offset: usize) -> Line {
         let graphemes = text[..].graphemes(true).count();
-        Line { text, graphemes }
+        Line {
+            text,
+            graphemes,
+            offset,
+        }
     }
 
     pub fn insert_grapheme(&mut self, idx: usize, grapheme: &str) {
@@ -69,7 +130,7 @@ impl Line {
     pub fn split_at(&mut self, idx: usize) -> Line {
         debug_assert!(idx <= self.graphemes);
         if idx == self.graphemes {
-            Line::new(String::new())
+            Line::new(String::new(), self.offset + self.len())
         } else {
             let rest = self.text[..].graphemes(true).skip(idx).collect();
             let g_idx = self.to_byte_idx(idx);
@@ -79,6 +140,7 @@ impl Line {
             Line {
                 text: rest,
                 graphemes: new_len,
+                offset: g_idx,
             }
         }
     }
@@ -99,7 +161,7 @@ impl Line {
             .fold(None, |acc, (i, (g, _))| {
                 acc.or(if i == idx { Some(g) } else { None })
             })
-            .unwrap()
+            .unwrap_or(0)
     }
 
     pub fn skip(&self, idx: usize) -> &str {
@@ -115,6 +177,10 @@ impl Line {
     pub fn merge(&mut self, other: &Self) {
         self.text.extend(other.text[..].graphemes(true));
         self.graphemes += other.graphemes;
+    }
+
+    pub fn bytes(&self) -> Bytes {
+        self.text.bytes()
     }
 }
 
@@ -157,30 +223,30 @@ mod test {
 
     #[test]
     fn split() {
-        let mut l = Line::new(String::from("abcdefg"));
+        let mut l = Line::new(String::from("abcdefg"), 0);
         let rest = l.split_at(4);
 
-        assert_eq!(l, Line::new(String::from("abcd")));
-        assert_eq!(rest, Line::new(String::from("efg")));
+        assert_eq!(l, Line::new(String::from("abcd"), 0));
+        assert_eq!(rest, Line::new(String::from("efg"), 0));
 
-        let mut l = Line::new(String::from("\u{2606}bcd\u{2606}fg"));
+        let mut l = Line::new(String::from("\u{2606}bcd\u{2606}fg"), 0);
         let rest = l.split_at(4);
-        assert_eq!(l, Line::new(String::from("\u{2606}bcd")));
-        assert_eq!(rest, Line::new(String::from("\u{2606}fg")));
+        assert_eq!(l, Line::new(String::from("\u{2606}bcd"), 0));
+        assert_eq!(rest, Line::new(String::from("\u{2606}fg"), 0));
     }
 
     #[test]
     fn remove() {
-        let mut l = Line::new(String::from("abcdefg"));
+        let mut l = Line::new(String::from("abcdefg"), 0);
         l.remove(3);
-        assert_eq!(l, Line::new(String::from("abcefg")));
+        assert_eq!(l, Line::new(String::from("abcefg"), 0));
     }
 
     #[test]
     fn to_byte_index() {
-        let l = Line::new(String::from("abc"));
+        let l = Line::new(String::from("abc"), 0);
         assert_eq!(l.to_byte_idx(2), 2);
-        let l = Line::new(String::from("\u{2606}bc"));
+        let l = Line::new(String::from("\u{2606}bc"), 0);
         assert_eq!(l.to_byte_idx(2), 4);
     }
 }

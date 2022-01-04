@@ -29,7 +29,7 @@ impl Pane {
             .get(self.buffer_id)
             .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
         self.cursor
-            .move_left_right(buffer, &mut self.offset, self.width.saturating_sub(2), dist);
+            .move_left_right(buffer, &mut self.offset, self.width.saturating_sub(4), dist);
         Ok(())
     }
 
@@ -42,24 +42,40 @@ impl Pane {
         self.cursor.move_up_down(
             buffer,
             &mut self.offset,
-            self.height - 1,
-            self.width.saturating_sub(2),
+            self.height.saturating_sub(1),
+            self.width.saturating_sub(4),
             dist,
         );
         Ok(())
     }
     pub fn set_cursor(&mut self, row: usize, col: usize) {
+        if col < self.offset.col {
+            self.offset.col = col;
+        }
+        if row < self.offset.row {
+            self.offset.row = row;
+        }
+        if col > self.offset.col + self.width {
+            self.offset.col = col - self.width;
+        }
+        if row > self.offset.row + self.height {
+            self.offset.row = row - self.height;
+        }
         self.cursor.col = col;
         self.cursor.row = row;
     }
 
     pub fn insert_grapheme(&mut self, buffers: &mut [Buffer], g: &str) -> Result<(), Error> {
+        debug_assert!(self.cursor.row - self.offset.row < self.height);
+        eprintln!("inserting grapheme {:?}", g.as_bytes());
         if g == "\r" {
+            eprintln!("inserting newline");
             let buffer = buffers
                 .get_mut(self.buffer_id)
                 .ok_or(Error::BufferClosedPrematurely(self.buffer_id))?;
             buffer.dirty = true;
             if let Some(line) = buffer.lines.get_mut(self.cursor.row) {
+                eprintln!("buffer line already existed {:?}", line);
                 debug_assert!(
                     line.len() >= self.cursor.col,
                     "cursor has moved past the end of the line"
@@ -67,9 +83,12 @@ impl Pane {
                 #[allow(clippy::indexing_slicing)]
                 let rest = line.split_at(self.cursor.col);
                 buffer.lines.insert(self.cursor.row.saturating_add(1), rest); // if the file is usize::MAX lines long this will break
-                self.set_cursor(self.cursor.row.saturating_add(1), 0);
+                self.move_cursor_up_down(buffers, 1)?;
+                self.offset.col = 0;
+                self.cursor.col = 0;
             } else {
-                buffer.lines.push(Line::default());
+                eprintln!("appending new line");
+                buffer.append_string(String::new());
                 self.move_cursor_up_down(buffers, 1)?;
             }
             Ok(())
@@ -87,7 +106,7 @@ impl Pane {
                 line.insert_grapheme(self.cursor.col, g);
                 self.move_cursor_left_right(buffers, 1)?;
             } else {
-                buffer.lines.push(Line::new(String::from(g)));
+                buffer.append_string(String::from(g));
             }
 
             Ok(())
@@ -160,6 +179,7 @@ impl Pane {
             col_offset: self.offset.col,
             height: self.height,
             row: 0,
+            row_offset: self.offset.row,
             status_bar,
             width: self.width,
             draw_tildes: buffer.is_norm(),
@@ -179,6 +199,7 @@ pub struct Iter<'a> {
     row: usize,
     draw_tildes: bool,
     highlighting: TextHighlighting,
+    row_offset: usize,
 }
 
 #[derive(Debug)]
@@ -209,7 +230,7 @@ impl<'a> Iterator for Iter<'a> {
                     col: 0,
                     width: self.width,
                     draw_tildes: self.draw_tildes,
-                    line: self.row,
+                    line: self.row + self.row_offset,
                     highlighting: None,
                 })
             } else {
@@ -231,8 +252,8 @@ impl<'a> Iterator for Iter<'a> {
                     col: 0,
                     width: self.width,
                     draw_tildes: self.draw_tildes,
-                    line: self.row,
-                    highlighting: self.highlighting.get_line(self.row - 1),
+                    line: self.row + self.row_offset,
+                    highlighting: self.highlighting.get_line(self.row + self.row_offset - 1),
                 })
             }
         } else {

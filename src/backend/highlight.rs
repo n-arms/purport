@@ -1,14 +1,12 @@
+use super::buffer::Buffer;
 use crate::frontend::ui::{Colour, IsNotColour};
 use regex::{Match, Regex};
-
 use std::collections::HashMap;
-
 use std::str;
-use toml::de;
-use toml::Value;
+use toml::{de, Value};
 
 pub trait Highlighter {
-    fn highlight(&self, text: &[&str]) -> TextHighlighting;
+    fn highlight(&mut self, buf: &Buffer) -> TextHighlighting;
 }
 
 #[derive(Clone, Debug)]
@@ -18,28 +16,29 @@ pub struct RegexHighlighter {
 }
 
 impl Highlighter for RegexHighlighter {
-    fn highlight(&self, text: &[&str]) -> TextHighlighting {
-        let numbers = text.iter().enumerate().flat_map(|(i, line)| {
+    fn highlight(&mut self, text: &Buffer) -> TextHighlighting {
+        let numbers = text.lines.iter().enumerate().flat_map(|(i, line)| {
             self.number
-                .find_iter(line)
+                .find_iter(line.skip(0))
                 .map(move |m| (i, Match::start(&m)))
         });
-        let operators = text.iter().enumerate().flat_map(|(i, line)| {
+        let operators = text.lines.iter().enumerate().flat_map(|(i, line)| {
             self.operator
-                .find_iter(line)
+                .find_iter(line.skip(0))
                 .map(move |m| (i, Match::start(&m)))
         });
         let text = text
+            .lines
             .iter()
             .enumerate()
             .flat_map(|(i, line)| {
                 self.operator
-                    .find_iter(line)
+                    .find_iter(line.skip(0))
                     .map(move |m| (i, Match::end(&m)))
             })
-            .chain(text.iter().enumerate().flat_map(|(i, line)| {
+            .chain(text.lines.iter().enumerate().flat_map(|(i, line)| {
                 self.number
-                    .find_iter(line)
+                    .find_iter(line.skip(0))
                     .map(move |m| (i, Match::end(&m)))
             }));
         let mut h: HashMap<usize, HashMap<usize, HighlightType>> = HashMap::new();
@@ -101,9 +100,28 @@ impl TextHighlighting {
             self.0.get(&row)?.clone(),
         ))
     }
+
+    pub fn from_ranges(
+        len: usize,
+        range: Vec<Range>,
+    ) -> Self {
+        let mut h = HashMap::new();
+        for i in 0..len {
+            h.insert(i, HashMap::new());
+        }
+        for Range{start: (start_row, start_col), stop: (end_row, end_col), highlight} in range {
+            h.get_mut(&start_row).unwrap().insert(start_col, highlight);
+            if !h[&end_row].contains_key(&end_col) {
+                h.get_mut(&end_row)
+                    .unwrap()
+                    .insert(end_col, HighlightType::Text);
+            }
+        }
+        TextHighlighting(h)
+    }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug)]
 pub struct LineHighlighting(HighlightType, HashMap<usize, HighlightType>);
 
 impl LineHighlighting {
@@ -121,11 +139,20 @@ impl Default for LineHighlighting {
     }
 }
 
+#[derive(Clone, Debug)]
+pub struct Range {
+    pub start: (usize, usize),
+    pub stop: (usize, usize),
+    pub highlight: HighlightType
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum HighlightType {
     Number,
     Operator,
     Text,
+    Keyword,
+    Variable,
 }
 
 #[derive(Debug)]
@@ -139,6 +166,8 @@ impl str::FromStr for HighlightType {
             "number" => Ok(HighlightType::Number),
             "operator" => Ok(HighlightType::Operator),
             "text" => Ok(HighlightType::Text),
+            "variable" => Ok(HighlightType::Variable),
+            "keyword" => Ok(HighlightType::Keyword),
             _ => Err(IsNotHighlightType(s.to_string())),
         }
     }
@@ -160,6 +189,8 @@ impl Default for Theme {
         let mut highlighting = HashMap::new();
         highlighting.insert(HighlightType::Number, Colour::Blue);
         highlighting.insert(HighlightType::Operator, Colour::Green);
+        highlighting.insert(HighlightType::Variable, Colour::Cyan);
+        highlighting.insert(HighlightType::Keyword, Colour::Yellow);
         highlighting.insert(HighlightType::Text, Colour::Reset);
         Theme { highlighting }
     }

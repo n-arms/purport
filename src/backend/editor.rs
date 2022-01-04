@@ -1,12 +1,16 @@
 use super::buffer::{Buffer, Line};
 use super::cursor::{Cursor, Offset};
-use super::highlight::{RegexHighlighter, Theme};
+use super::highlight::{Theme};
 use super::pane::{Char, Pane};
 use super::prompt::Prompt;
+use super::tree_highlighter::TreeSitterHighlighter;
 use crate::frontend::ui::{self, EscapeSeq, Event, UI};
-use regex::Regex;
+
+use std::cell::RefCell;
 use std::fs;
 use std::io;
+use tree_sitter::Query;
+use tree_sitter_javascript::{language, HIGHLIGHT_QUERY};
 
 #[derive(Debug)]
 pub struct Editor<U: UI> {
@@ -40,17 +44,22 @@ impl<U: UI> Editor<U> {
                 is_norm: false,
                 highlighter: None,
                 file_type: None,
+                cached_bytes: None,
             },
             Buffer {
                 lines: vec![Line::default()],
                 file_name: None,
                 dirty: false,
                 is_norm: true,
-                highlighter: Some(Box::new(RegexHighlighter {
-                    number: Regex::new("\\d+").unwrap(),
-                    operator: Regex::new("(\\+)|(\\*)|-|/").unwrap(),
-                })),
+                highlighter: Some(RefCell::new(Box::new(
+                    TreeSitterHighlighter::new(
+                        language(),
+                        Query::new(language(), HIGHLIGHT_QUERY).unwrap(),
+                    )
+                    .unwrap(),
+                ))),
                 file_type: None,
+                cached_bytes: None,
             },
         ];
         let prompt = Prompt::new(ui.width(), 0, &mut buffers, "")?;
@@ -73,21 +82,14 @@ impl<U: UI> Editor<U> {
 
     pub fn load_into(&mut self, buffer_id: usize, file_name: Option<String>) -> Option<()> {
         let buffer = self.buffers.get_mut(buffer_id)?;
-        buffer.lines = file_name
-            .clone()
-            .and_then(|fp| fs::read(&fp).ok())
-            .map_or_else(
-                || vec![Line::default()],
-                |file| {
-                    let mut lines: Vec<_> = String::from_utf8_lossy(file.as_ref())
-                        .split('\n')
-                        .map(|line| Line::new(line.chars().collect::<String>()))
-                        .collect();
-                    lines.truncate(lines.len().saturating_sub(1));
-                    lines
-                },
-            );
-        buffer.file_name = file_name;
+        if let Some(bytes) = file_name.clone().and_then(|fp| fs::read(&fp).ok()) {
+            *buffer = Buffer::from_bytes(&bytes, file_name);
+        } else {
+            buffer.lines = vec![Line::default()];
+            buffer.file_name = None;
+            buffer.dirty = false;
+            buffer.is_norm = true;
+        }
         Some(())
     }
 
@@ -123,6 +125,7 @@ impl<U: UI> Editor<U> {
         Ok(())
     }
 
+    // we are currently highlighting relative to the bottom of the screen instead of line 0: TODO
     pub fn draw(&mut self) -> Result<(), Error> {
         /*
         let margin = "\n".repeat(if self.pane.height <= self.pane.height / 3 + 5 {0} else {self.pane.height / 3});
@@ -156,11 +159,12 @@ impl<U: UI> Editor<U> {
                     Char::Background(c) => self.ui.set_background(c),
                 }
             }
-            self.ui.move_cursor(
-                self.pane.cursor.row + 1 - self.pane.offset.row,
-                self.pane.cursor.col + 5 - self.pane.offset.col,
-            );
+            self.ui.set_foreground(ui::Colour::Reset);
         }
+        self.ui.move_cursor(
+            self.pane.cursor.row + 1 - self.pane.offset.row,
+            self.pane.cursor.col + 5 - self.pane.offset.col,
+        );
         Ok(())
     }
     // processing an event could result in processing a prompt
