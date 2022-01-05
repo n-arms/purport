@@ -1,16 +1,17 @@
 use super::buffer::{Buffer, Line};
 use super::cursor::{Cursor, Offset};
-use super::highlight::Theme;
+use super::highlight::{Theme, Highlighter};
 use super::pane::{Char, Pane};
 use super::prompt::Prompt;
 use super::tree_highlighter::TreeSitterHighlighter;
 use crate::frontend::ui::{self, EscapeSeq, Event, UI};
+use std::path::Path;
 
 use std::cell::RefCell;
 use std::fs;
 use std::io;
-use std::time::{Instant};
-use tree_sitter::Query;
+use std::time::Instant;
+use tree_sitter::{Query, Language};
 use tree_sitter_javascript::{language, HIGHLIGHT_QUERY};
 
 #[derive(Debug)]
@@ -43,13 +44,7 @@ impl<U: UI> Editor<U> {
                 vec![Line::default()],
                 true,
                 None,
-                Some(RefCell::new(Box::new(
-                    TreeSitterHighlighter::new(
-                        language(),
-                        Query::new(language(), HIGHLIGHT_QUERY).unwrap(),
-                    )
-                    .unwrap(),
-                ))),
+                None
             ),
         ];
         let prompt = Prompt::new(ui.width(), 0, &mut buffers, "")?;
@@ -70,10 +65,21 @@ impl<U: UI> Editor<U> {
         })
     }
 
+    pub fn language(file_name: &str) -> Option<(Language, Query)> {
+        let ext = Path::new(file_name).extension()?;
+        match ext.to_str()? {
+            "js" => Some((language(), Query::new(language(), HIGHLIGHT_QUERY).ok()?)),
+            _ => None
+        }
+    }
+
     pub fn load_into(&mut self, buffer_id: usize, file_name: Option<String>) -> Option<()> {
         let buffer = self.buffers.get_mut(buffer_id)?;
         if let Some(bytes) = file_name.clone().and_then(|fp| fs::read(&fp).ok()) {
-            *buffer = Buffer::from_bytes(&bytes, file_name);
+            let (l, q) = if let Some(fp) = &file_name {
+                Editor::<U>::language(fp.as_str())
+            } else {None}?;
+            *buffer = Buffer::from_bytes(&bytes, file_name, Some(RefCell::new(Box::new(TreeSitterHighlighter::new(l, q).ok()?))));
         } else {
             buffer.clear();
             buffer.file_name = None;

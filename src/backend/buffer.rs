@@ -140,7 +140,7 @@ impl Buffer {
         }
     }
 
-    pub fn from_bytes(bytes: &[u8], file_name: Option<String>) -> Self {
+    pub fn from_bytes(bytes: &[u8], file_name: Option<String>, highlighter: Option<RefCell<Box<dyn Highlighter>>>) -> Self {
         let mut lines = Vec::new();
         bytes.split(|b| *b == b'\n').fold(0, |offset, line_bytes| {
             let line = String::from_utf8_lossy(line_bytes).to_string();
@@ -151,7 +151,7 @@ impl Buffer {
             dirty: false,
             file_name,
             file_type: None,
-            highlighter: None,
+            highlighter,
             is_norm: true,
             lines,
         }
