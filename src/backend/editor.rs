@@ -4,6 +4,7 @@ use super::highlight::{Theme, Highlighter};
 use super::pane::{Char, Pane};
 use super::prompt::Prompt;
 use super::tree_highlighter::TreeSitterHighlighter;
+use super::dyn_load::*;
 use crate::frontend::ui::{self, EscapeSeq, Event, UI};
 use std::path::Path;
 
@@ -22,6 +23,7 @@ pub struct Editor<U: UI> {
     pub prompt: Prompt,
     pub ui: U,
     pub theme: Theme,
+    pub dyn_libraries: Libraries
 }
 
 #[derive(Clone, Debug, Copy)]
@@ -62,6 +64,7 @@ impl<U: UI> Editor<U> {
             prompt,
             ui,
             theme: Theme::default(),
+            dyn_libraries: Libraries::new()
         })
     }
 

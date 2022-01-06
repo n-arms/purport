@@ -1,3 +1,4 @@
+/*
 #![warn(clippy::all, clippy::pedantic)]
 #![allow(
     clippy::implicit_return,
@@ -27,6 +28,7 @@ fn main() -> Result<(), Error> {
 
     Ok(())
 }
+*/
 
 /*
 use std::io::{self, Read, Write};
@@ -37,3 +39,15 @@ fn main() {
     }
 }
 */
+
+mod backend;
+mod frontend;
+use backend::dyn_load::*;
+use tree_sitter::*;
+fn main() {
+    let mut libs = Libraries::new();
+    let l = libs.get_or_load("javascript", "./target/", "./tree-sitter-javascript/", "g++", "gcc").expect("failed to load js");
+    let mut p = Parser::new();
+    p.set_language(l.lang.clone()).unwrap();
+    println!("{}", p.parse(b"if (a) {1} else {2}", None).unwrap().root_node().to_sexp());
+}
