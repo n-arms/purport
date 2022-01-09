@@ -1,103 +1,30 @@
 use super::buffer::Buffer;
 use crate::frontend::ui::{Colour, IsNotColour};
-use regex::{Regex};
-
 use std::collections::HashMap;
-use std::hash::{Hash, Hasher};
+use std::hash::Hash;
 use std::str;
 use toml::{de, Value};
+
+pub trait Factory {
+    fn make(&self) -> anyhow::Result<Box<dyn Highlighter>>;
+}
 
 pub trait Highlighter {
     fn highlight(&mut self, buf: &Buffer) -> TextHighlighting;
 }
 
-#[derive(Clone, Debug)]
-pub struct RegexHighlighter {
-    pub operator: Regex,
-    pub number: Regex,
-}
-
-impl Highlighter for RegexHighlighter {
-    fn highlight(&mut self, _text: &Buffer) -> TextHighlighting {
-        /*
-        let numbers = text.lines.iter().enumerate().flat_map(|(i, line)| {
-            self.number
-                .find_iter(line.skip(0))
-                .map(move |m| (i, Match::start(&m)))
-        });
-        let operators = text.lines.iter().enumerate().flat_map(|(i, line)| {
-            self.operator
-                .find_iter(line.skip(0))
-                .map(move |m| (i, Match::start(&m)))
-        });
-        let text = text
-            .lines
-            .iter()
-            .enumerate()
-            .flat_map(|(i, line)| {
-                self.operator
-                    .find_iter(line.skip(0))
-                    .map(move |m| (i, Match::end(&m)))
-            })
-            .chain(text.lines.iter().enumerate().flat_map(|(i, line)| {
-                self.number
-                    .find_iter(line.skip(0))
-                    .map(move |m| (i, Match::end(&m)))
-            }));
-        let mut h: HashMap<usize, HashMap<usize, HighlightType>> = HashMap::new();
-        for (i, n) in numbers {
-            if let Some(l) = h.get_mut(&i) {
-                l.insert(n, HighlightType::Number);
-            } else {
-                h.insert(i, {
-                    let mut sub = HashMap::new();
-                    sub.insert(n, HighlightType::Number);
-                    sub
-                });
-            }
-        }
-        for (i, o) in operators {
-            if let Some(l) = h.get_mut(&i) {
-                l.insert(o, HighlightType::Operator);
-            } else {
-                h.insert(i, {
-                    let mut sub = HashMap::new();
-                    sub.insert(o, HighlightType::Operator);
-                    sub
-                });
-            }
-        }
-        for (i, t) in text {
-            if let Some(l) = h.get_mut(&i) {
-                l.insert(t, HighlightType::Text);
-            } else {
-                h.insert(i, {
-                    let mut sub = HashMap::new();
-                    sub.insert(t, HighlightType::Operator);
-                    sub
-                });
-            }
-        }
-        TextHighlighting(h)
-        */
-        todo!()
-    }
-}
-
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
-pub struct TextHighlighting(HashMap<usize, HashMap<usize, HighlightType>>);
+pub struct TextHighlighting(HashMap<usize, HashMap<usize, Type>>);
 
 impl TextHighlighting {
     fn row_len(&self, row: usize) -> usize {
         self.0.get(&row).map_or(0, HashMap::len)
     }
 
-    // the problem is at or before here
     pub fn get_line(&self, row: usize) -> Option<LineHighlighting> {
-        let mut start: Option<HighlightType> = None;
+        let mut start: Option<Type> = None;
         for i in (0..row).rev() {
             if self.row_len(i) != 0 {
-                //start = self.0.get(&i).and_then(|row| row.values().last()).copied();
                 if let Some(row) = self.0.get(&i) {
                     let mut largest = 0;
                     for k in row.keys() {
@@ -109,7 +36,7 @@ impl TextHighlighting {
             }
         }
         Some(LineHighlighting(
-            start.unwrap_or(HighlightType::Text),
+            start.unwrap_or(Type::Text),
             self.0.get(&row)?.clone(),
         ))
     }
@@ -129,7 +56,7 @@ impl TextHighlighting {
             if !h[&end_row].contains_key(&end_col) {
                 h.get_mut(&end_row)
                     .unwrap()
-                    .insert(end_col, HighlightType::Text);
+                    .insert(end_col, Type::Text);
             }
         }
         TextHighlighting(h)
@@ -137,10 +64,10 @@ impl TextHighlighting {
 }
 
 #[derive(Clone, Debug)]
-pub struct LineHighlighting(HighlightType, HashMap<usize, HighlightType>);
+pub struct LineHighlighting(Type, HashMap<usize, Type>);
 
 impl LineHighlighting {
-    pub fn get(&self, idx: usize) -> Option<HighlightType> {
+    pub fn get(&self, idx: usize) -> Option<Type> {
         self.1
             .get(&idx)
             .copied()
@@ -150,7 +77,7 @@ impl LineHighlighting {
 
 impl Default for LineHighlighting {
     fn default() -> Self {
-        LineHighlighting(HighlightType::Text, HashMap::new())
+        LineHighlighting(Type::Text, HashMap::new())
     }
 }
 
@@ -158,11 +85,11 @@ impl Default for LineHighlighting {
 pub struct Range {
     pub start: (usize, usize),
     pub stop: (usize, usize),
-    pub highlight: HighlightType,
+    pub highlight: Type,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum HighlightType {
+pub enum Type {
     Number,
     Operator,
     Text,
@@ -171,30 +98,30 @@ pub enum HighlightType {
 }
 
 #[derive(Debug)]
-pub struct IsNotHighlightType(String);
+pub struct IsNotType(String);
 
-impl str::FromStr for HighlightType {
-    type Err = IsNotHighlightType;
+impl str::FromStr for Type {
+    type Err = IsNotType;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "number" => Ok(HighlightType::Number),
-            "operator" => Ok(HighlightType::Operator),
-            "text" => Ok(HighlightType::Text),
-            "variable" => Ok(HighlightType::Variable),
-            "keyword" => Ok(HighlightType::Keyword),
-            _ => Err(IsNotHighlightType(s.to_string())),
+            "number" => Ok(Type::Number),
+            "operator" => Ok(Type::Operator),
+            "text" => Ok(Type::Text),
+            "variable" => Ok(Type::Variable),
+            "keyword" => Ok(Type::Keyword),
+            _ => Err(IsNotType(s.to_string())),
         }
     }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Theme {
-    highlighting: HashMap<HighlightType, Colour>,
+    highlighting: HashMap<Type, Colour>,
 }
 
 impl Theme {
-    pub fn get(&self, h: HighlightType) -> Colour {
+    pub fn get(&self, h: Type) -> Colour {
         self.highlighting.get(&h).copied().unwrap()
     }
 }
@@ -202,11 +129,11 @@ impl Theme {
 impl Default for Theme {
     fn default() -> Self {
         let mut highlighting = HashMap::new();
-        highlighting.insert(HighlightType::Number, Colour::Blue);
-        highlighting.insert(HighlightType::Operator, Colour::Green);
-        highlighting.insert(HighlightType::Variable, Colour::Cyan);
-        highlighting.insert(HighlightType::Keyword, Colour::Yellow);
-        highlighting.insert(HighlightType::Text, Colour::Reset);
+        highlighting.insert(Type::Number, Colour::Blue);
+        highlighting.insert(Type::Operator, Colour::Green);
+        highlighting.insert(Type::Variable, Colour::Cyan);
+        highlighting.insert(Type::Keyword, Colour::Yellow);
+        highlighting.insert(Type::Text, Colour::Reset);
         Theme { highlighting }
     }
 }
@@ -215,7 +142,7 @@ impl Default for Theme {
 pub enum Error {
     Toml(de::Error),
     Colour(IsNotColour),
-    HighlightType(IsNotHighlightType),
+    Type(IsNotType),
     IsntTable,
     IsntString,
 }
@@ -230,7 +157,7 @@ impl str::FromStr for Theme {
             for (k, v) in t {
                 if let Value::String(s) = v {
                     highlighting.insert(
-                        k.parse::<HighlightType>().map_err(Error::HighlightType)?,
+                        k.parse::<Type>().map_err(Error::Type)?,
                         s.parse::<Colour>().map_err(Error::Colour)?,
                     );
                 } else {
@@ -258,8 +185,8 @@ mod test {
         .unwrap();
 
         let mut highlighting = HashMap::new();
-        highlighting.insert(HighlightType::Operator, Colour::Red);
-        highlighting.insert(HighlightType::Number, Colour::Green);
+        highlighting.insert(Type::Operator, Colour::Red);
+        highlighting.insert(Type::Number, Colour::Green);
         assert_eq!(theme, Theme { highlighting });
     }
 }

@@ -1,29 +1,38 @@
 use super::buffer::{Buffer, Line};
 use super::cursor::{Cursor, Offset};
-use super::highlight::{Theme, Highlighter};
+use super::highlight::{Theme};
 use super::pane::{Char, Pane};
 use super::prompt::Prompt;
-use super::tree_highlighter::TreeSitterHighlighter;
-use super::dyn_load::*;
 use crate::frontend::ui::{self, EscapeSeq, Event, UI};
-use std::path::Path;
+use std::path::{PathBuf};
 
+use super::language::Languages;
 use std::cell::RefCell;
 use std::fs;
 use std::io;
+
 use std::time::Instant;
-use tree_sitter::{Query, Language};
-use tree_sitter_javascript::{language, HIGHLIGHT_QUERY};
+
+
+#[cfg(unix)]
+static C_COMPILER: &str = "gcc";
+#[cfg(unix)]
+static CPP_COMPILER: &str = "g++";
+#[cfg(unix)]
+static TARGET_DIR: &str = "./target/temp/";
+
+#[cfg(windows)]
+static DEFAULT_SYSTEM_DATA: GlobalSystemData = panic!("i am not familiar with windows and so don't know what sensible system defaults would be, if you are looking for windows support, please submit a pull request");
 
 #[derive(Debug)]
 pub struct Editor<U: UI> {
-    pub buffers: Vec<Buffer>,
-    pub pane: Pane,
-    pub mode: Mode,
-    pub prompt: Prompt,
-    pub ui: U,
-    pub theme: Theme,
-    pub dyn_libraries: Libraries
+    buffers: Vec<Buffer>,
+    pane: Pane,
+    mode: Mode,
+    prompt: Prompt,
+    ui: U,
+    theme: Theme,
+    extensions: Languages,
 }
 
 #[derive(Clone, Debug, Copy)]
@@ -34,20 +43,15 @@ pub enum Mode {
 #[derive(Debug)]
 pub enum Error {
     BufferClosedPrematurely(usize),
-    IOErr(io::Error),
-    UIErr(ui::Error),
+    IO(io::Error),
+    UI(ui::Error),
 }
 
 impl<U: UI> Editor<U> {
     pub fn open(ui: U) -> Result<Self, Error> {
         let mut buffers = vec![
             Buffer::new(vec![Line::default()], false, None, None),
-            Buffer::new(
-                vec![Line::default()],
-                true,
-                None,
-                None
-            ),
+            Buffer::new(vec![Line::default()], true, None, None),
         ];
         let prompt = Prompt::new(ui.width(), 0, &mut buffers, "")?;
 
@@ -64,25 +68,25 @@ impl<U: UI> Editor<U> {
             prompt,
             ui,
             theme: Theme::default(),
-            dyn_libraries: Libraries::new()
+            extensions: Languages::default(),
         })
-    }
-
-    pub fn language(file_name: &str) -> Option<(Language, Query)> {
-        let ext = Path::new(file_name).extension()?;
-        match ext.to_str()? {
-            "js" => Some((language(), Query::new(language(), HIGHLIGHT_QUERY).ok()?)),
-            _ => None
-        }
     }
 
     pub fn load_into(&mut self, buffer_id: usize, file_name: Option<String>) -> Option<()> {
         let buffer = self.buffers.get_mut(buffer_id)?;
         if let Some(bytes) = file_name.clone().and_then(|fp| fs::read(&fp).ok()) {
-            let (l, q) = if let Some(fp) = &file_name {
-                Editor::<U>::language(fp.as_str())
-            } else {None}?;
-            *buffer = Buffer::from_bytes(&bytes, file_name, Some(RefCell::new(Box::new(TreeSitterHighlighter::new(l, q).ok()?))));
+            let h = if let Some(fp) = &file_name {
+                match self.extensions.get(fp) {
+                    Ok(res) => Some(res),
+                    Err(e) => {
+                        eprintln!("{:?}", e);
+                        None
+                    }
+                }
+            } else {
+                None
+            }?;
+            *buffer = Buffer::from_bytes(&bytes, file_name, Some(RefCell::new(h)));
         } else {
             buffer.clear();
             buffer.file_name = None;
@@ -98,7 +102,7 @@ impl<U: UI> Editor<U> {
             .get_mut(buffer_id)
             .ok_or(Error::BufferClosedPrematurely(buffer_id))?;
         if let Some(fp) = &buffer.file_name {
-            fs::write(fp, buffer.to_chunk()).map_err(Error::IOErr)?;
+            fs::write(fp, buffer.to_chunk()).map_err(Error::IO)?;
             buffer.dirty = false;
         } else {
             let new_name = Some(self.prompt("Enter the file name: ")?);
@@ -133,11 +137,6 @@ impl<U: UI> Editor<U> {
             for (col, ch) in line.enumerate() {
                 if let Some(c) = col.checked_sub(4) {
                     if let Some(h) = line_highlighting.as_ref().and_then(|lh| lh.get(c)) {
-                        /*
-                        if h != HighlightType::Text {
-                            panic!("highlighting column {:?} line {:?} with colour {:?}", col, i, h);
-                        }
-                        */
                         self.ui.set_foreground(self.theme.get(h));
                     }
                 }
@@ -223,7 +222,7 @@ impl<U: UI> Editor<U> {
         self.refresh()?;
         let res;
         loop {
-            let ev = self.ui.next_event().map_err(Error::UIErr)?;
+            let ev = self.ui.next_event().map_err(Error::UI)?;
             match ev {
                 Event::SpecialChar(EscapeSeq::DownArrow | EscapeSeq::UpArrow) => continue,
                 Event::SpecialChar(EscapeSeq::LeftArrow) => {
@@ -250,7 +249,7 @@ impl<U: UI> Editor<U> {
     pub fn mainloop(mut self) -> Result<(), Error> {
         self.refresh()?;
         loop {
-            let ev = self.ui.next_event().map_err(Error::UIErr)?;
+            let ev = self.ui.next_event().map_err(Error::UI)?;
             if self.process_event(&ev)? {
                 break;
             }
@@ -261,6 +260,25 @@ impl<U: UI> Editor<U> {
 
     pub fn refresh(&mut self) -> Result<(), Error> {
         self.draw()?;
-        self.ui.refresh().map_err(Error::UIErr)
+        self.ui.refresh().map_err(Error::UI)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct GlobalSystemData {
+    pub c_compiler: String,
+    pub cpp_compiler: String,
+    pub target_dir: PathBuf,
+}
+
+impl Default for GlobalSystemData {
+    fn default() -> Self {
+        let mut target_dir = PathBuf::new();
+        target_dir.push(TARGET_DIR);
+        GlobalSystemData {
+            c_compiler: String::from(C_COMPILER),
+            cpp_compiler: String::from(CPP_COMPILER),
+            target_dir
+        }
     }
 }

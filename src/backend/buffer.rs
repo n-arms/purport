@@ -70,7 +70,7 @@ impl Buffer {
         }
         let line = &self.lines[index].clone();
         let prev = self.lines.get_mut(index - 1).unwrap();
-        prev.merge(&line);
+        prev.merge(line);
         self.lines.remove(index);
         for line in &mut self.lines[index..] {
             line.offset -= 1;
@@ -140,7 +140,11 @@ impl Buffer {
         }
     }
 
-    pub fn from_bytes(bytes: &[u8], file_name: Option<String>, highlighter: Option<RefCell<Box<dyn Highlighter>>>) -> Self {
+    pub fn from_bytes(
+        bytes: &[u8],
+        file_name: Option<String>,
+        highlighter: Option<RefCell<Box<dyn Highlighter>>>,
+    ) -> Self {
         let mut lines = Vec::new();
         bytes.split(|b| *b == b'\n').fold(0, |offset, line_bytes| {
             let line = String::from_utf8_lossy(line_bytes).to_string();
