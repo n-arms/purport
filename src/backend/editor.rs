@@ -1,10 +1,10 @@
 use super::buffer::{Buffer, Line};
 use super::cursor::{Cursor, Offset};
-use super::highlight::{Theme};
+use super::highlight::Theme;
 use super::pane::{Char, Pane};
 use super::prompt::Prompt;
 use crate::frontend::ui::{self, EscapeSeq, Event, UI};
-use std::path::{PathBuf};
+use std::path::PathBuf;
 
 use super::language::Languages;
 use std::cell::RefCell;
@@ -12,7 +12,6 @@ use std::fs;
 use std::io;
 
 use std::time::Instant;
-
 
 #[cfg(unix)]
 static C_COMPILER: &str = "gcc";
@@ -137,6 +136,7 @@ impl<U: UI> Editor<U> {
             for (col, ch) in line.enumerate() {
                 if let Some(c) = col.checked_sub(4) {
                     if let Some(h) = line_highlighting.as_ref().and_then(|lh| lh.get(c)) {
+                        eprintln!("highlighting {:?}", h);
                         self.ui.set_foreground(self.theme.get(h));
                     }
                 }
@@ -278,7 +278,7 @@ impl Default for GlobalSystemData {
         GlobalSystemData {
             c_compiler: String::from(C_COMPILER),
             cpp_compiler: String::from(CPP_COMPILER),
-            target_dir
+            target_dir,
         }
     }
 }

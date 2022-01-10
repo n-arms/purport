@@ -2,11 +2,14 @@ use libloading::{Library, Symbol};
 
 use std::ffi::OsStr;
 
+use reqwest::blocking::get;
+use sha2::{Digest, Sha256};
 use std::fs;
 use std::io;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use tree_sitter::{Language, Query, QueryError};
+use zip::read::ZipArchive;
 
 #[cfg(unix)]
 const DYN_LIB_EXT: &str = "so";
@@ -99,9 +102,8 @@ impl Lib {
         for file in cc.into_iter().chain(cpp.into_iter()) {
             let mut object_path = target_dir.as_ref().to_path_buf();
             object_path.push(
-                file.file_stem().expect(
-                    "logic error in Lib::files_with_ext, produced file with no prefix",
-                ),
+                file.file_stem()
+                    .expect("logic error in Lib::files_with_ext, produced file with no prefix"),
             );
             object_path.set_extension("o");
             Lib::compile_to_obj(
@@ -115,9 +117,8 @@ impl Lib {
         for file in c {
             let mut object_path = target_dir.as_ref().to_path_buf();
             object_path.push(
-                file.file_stem().expect(
-                    "logic error in Lib::files_with_ext, produced file with no prefix",
-                ),
+                file.file_stem()
+                    .expect("logic error in Lib::files_with_ext, produced file with no prefix"),
             );
             object_path.set_extension("o");
             Lib::compile_to_obj(
@@ -180,13 +181,8 @@ impl Lib {
         if !target_dir.as_ref().exists() {
             fs::create_dir_all(&target_dir).map_err(Error::IO)?;
         }
-        let lib_path = Lib::compile_dyn_lib(
-            cpp_compiler,
-            c_compiler,
-            &root_dir,
-            &lang_name,
-            target_dir,
-        )?;
+        let lib_path =
+            Lib::compile_dyn_lib(cpp_compiler, c_compiler, &root_dir, &lang_name, target_dir)?;
         let lib = unsafe { Library::new(lib_path.as_ref()) }.map_err(Error::Linker)?;
 
         let mut lang_func_name = b"tree_sitter_".to_vec();
@@ -208,41 +204,41 @@ impl Lib {
         Ok(Lib {
             lib,
             lang,
-            highlighting
+            highlighting,
         })
     }
 
-    pub fn install(root_dir: impl AsRef<Path>, url: &str) -> Result<(), Error> {
-        if !Lib::command_succeeds("git --version") {
-            return Err(Error::MissingPrerequisite(String::from("git")));
-        }
+    pub fn install(root_dir: impl AsRef<Path>, url: &str, hash: &[u8]) -> Result<PathBuf, Error> {
         if !root_dir.as_ref().exists() {
             fs::create_dir_all(root_dir.as_ref()).map_err(Error::IO)?;
-            let exit = Command::new("git")
-                .arg("-C")
-                .arg(root_dir.as_ref())
-                .arg("clone")
-                .arg(url)
-                .arg(".")
-                .spawn()
-                .map_err(Error::IO)?
-                .wait()
-                .map_err(Error::IO)?;
-            if !exit.success() {
-                return Err(Error::NonZeroExitStatus(
-                    exit.code(),
-                    String::from("git -C clone"),
-                ));
-            }
         }
-        Ok(())
+        let zipped_repo = get(url)
+            .map_err(Error::Reqwest)?
+            .bytes()
+            .map_err(Error::Reqwest)?
+            .to_vec();
+        let repo_hash = Sha256::new().chain_update(&zipped_repo).finalize();
+        if &repo_hash[..] != hash {
+            return Err(Error::SecurityFlawDetected(
+                url.to_string(),
+                hash.to_vec(),
+                repo_hash.to_vec(),
+            ));
+        }
+
+        let mut install_dir = root_dir.as_ref().to_path_buf();
+        let mut archive = ZipArchive::new(io::Cursor::new(&zipped_repo[..])).map_err(Error::Zip)?;
+        archive
+            .file_names()
+            .min_by_key(|e| e.len())
+            .map(|e| install_dir.push(e))
+            .ok_or(Error::GitRepoWasEmpty)?;
+        archive.extract(root_dir).map_err(Error::Zip)?;
+        Ok(install_dir)
     }
 
     fn command_succeeds(cmd: &str) -> bool {
-        let child = Command::new("sh")
-            .arg("-c")
-            .arg(cmd)
-            .spawn();
+        let child = Command::new("sh").arg("-c").arg(cmd).spawn();
         if let Ok(exit) = child.and_then(|mut c| c.wait()) {
             exit.success()
         } else {
@@ -285,4 +281,8 @@ pub enum Error {
     UnexpectedBehaviourFrom(String),
     MalformedQuery(QueryError),
     MissingPrerequisite(String),
+    Reqwest(reqwest::Error),
+    SecurityFlawDetected(String, Vec<u8>, Vec<u8>),
+    Zip(zip::result::ZipError),
+    GitRepoWasEmpty,
 }

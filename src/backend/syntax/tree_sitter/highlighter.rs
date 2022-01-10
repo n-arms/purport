@@ -14,7 +14,7 @@ impl HighlightQuery {
     pub fn new(query: Query, capture_table: Vec<String>) -> Self {
         Self {
             query,
-            capture_table
+            capture_table,
         }
     }
 }
@@ -66,6 +66,7 @@ impl TreeSitterHighlighter {
         let mut cursor = QueryCursor::new(); // we need a way to map from the number of bytes to the line # and col #
         let mut ranges = Vec::new();
         for m in cursor.matches(&self.query.query, tree.root_node(), &buf.to_chunk()[..]) {
+            eprintln!("\t{:?}", m);
             for capture in m.captures {
                 if let Ok(highlight) = self.query.capture_table[capture.index as usize].parse() {
                     ranges.push(Range {
@@ -84,6 +85,7 @@ impl Highlighter for TreeSitterHighlighter {
     fn highlight(&mut self, buf: &Buffer) -> TextHighlighting {
         let buffer = buf.to_chunk();
         self.tree = self.parser.parse(&buffer[..], None);
+        eprintln!("{}", self.tree.as_ref().unwrap().root_node().to_sexp());
         self.highlight_from_tree(buf)
     }
 }

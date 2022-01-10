@@ -35,7 +35,7 @@ pub struct Loaded {
     /// HighlightQuery contains a non-clonable Query, so an Rc is needed
     pub query: Rc<HighlightQuery>,
     pub language: tree_sitter::Language,
-    _lib: Rc<Library>
+    _lib: Rc<Library>,
 }
 
 /// A lazy loaded tree sitter parser
@@ -53,16 +53,17 @@ pub struct Language {
 /// Many tree sitter parsers depend on more than just c and c++ (eg. the zig parser).
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Init {
-    /// The url to the git repo that the parser sits in. The repo should have a similar shape to parsers such as
-    /// github.com/tree-sitter/tree-sitter-javascript, although it only needs the src/ and query/ folders
-    git_repo: String,
+    /// The url that contains a zip of the parser
+    url: String,
     /// The name of the language (without the tree-sitter- prefix), for example "javascript"
     name: String,
+    /// The sha256 hash of the zip of the parser
+    hash: [u8; 32],
 }
 
 impl Init {
-    pub fn new(git_repo: String, name: String) -> Self {
-        Init { git_repo, name }
+    pub fn new(url: String, name: String, hash: [u8; 32]) -> Self {
+        Init { url, name, hash }
     }
 }
 
@@ -86,22 +87,25 @@ impl Language {
     pub fn new(lang: Init, sys: GlobalSystemData) -> Self {
         Language {
             init: Cell::new(Some(Box::new(move || {
-                let mut install_path = sys.target_dir.clone();
-                install_path.push(format!("tree-sitter-{}/", lang.name));
-
                 let mut compile_path = sys.target_dir.clone();
                 compile_path.push(format!("tree-sitter-{}-build/", lang.name));
 
-                Lib::install(&install_path, &lang.git_repo).map_err(Error::Loader)?;
-                let l = Lib::build_lib(lang.name, compile_path, install_path, sys.cpp_compiler, sys.c_compiler).map_err(Error::Loader)?;
-                let capture_table = TreeSitterHighlighter::make_capture_table(&l.highlighting).map_err(Error::Query)?;
+                let install_path = Lib::install(&sys.target_dir, &lang.url, &lang.hash)
+                    .map_err(Error::Loader)?;
+                let l = Lib::build_lib(
+                    lang.name,
+                    compile_path,
+                    install_path,
+                    sys.cpp_compiler,
+                    sys.c_compiler,
+                )
+                .map_err(Error::Loader)?;
+                let capture_table = TreeSitterHighlighter::make_capture_table(&l.highlighting)
+                    .map_err(Error::Query)?;
                 Ok(Loaded {
                     language: l.lang,
-                    query: Rc::new(HighlightQuery::new(
-                        l.highlighting,
-                        capture_table
-                    )),
-                    _lib: Rc::new(l.lib)
+                    query: Rc::new(HighlightQuery::new(l.highlighting, capture_table)),
+                    _lib: Rc::new(l.lib),
                 })
             }))),
             cell: OnceCell::new(),

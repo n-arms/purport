@@ -54,9 +54,7 @@ impl TextHighlighting {
         {
             h.get_mut(&start_row).unwrap().insert(start_col, highlight);
             if !h[&end_row].contains_key(&end_col) {
-                h.get_mut(&end_row)
-                    .unwrap()
-                    .insert(end_col, Type::Text);
+                h.get_mut(&end_row).unwrap().insert(end_col, Type::Text);
             }
         }
         TextHighlighting(h)
