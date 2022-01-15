@@ -149,7 +149,7 @@ impl Buffer {
         bytes.split(|b| *b == b'\n').fold(0, |offset, line_bytes| {
             let line = String::from_utf8_lossy(line_bytes).to_string();
             lines.push(Line::new(line, offset));
-            offset + lines.last().unwrap().text.len()
+            offset + lines.last().unwrap().text.len() + 1
         });
         Buffer {
             dirty: false,
